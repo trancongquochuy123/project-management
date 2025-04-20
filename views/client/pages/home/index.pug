@@ -1,6 +1,19 @@
 extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
 
 block main
-  h1 Welcome to the Home Page
-  p This is the home page of our application.
+  .container.my-3
+    .row
+      .col-12
+        +box-head("Products List")
 
+    .row 
+      .col-4.mb-3
+        .product-item 
+          .inner-image
+            img(src="https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/thumbnail.png", alt="Ip9")
+          .inner-content 
+            h3.inner-title Product 1
+            p.inner-price-old Price: $100.00
+            p.inner-price-new Price: $100.00
+            p.inner-discount Discount: 80%
