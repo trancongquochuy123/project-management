@@ -83,3 +83,109 @@
     background-color: #34495e;
     color: #1abc9c;
 }
+
+/* Start table */
+.product-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.product-table thead {
+    background: linear-gradient(90deg, #2c3e50 0%, #34495e 100%);
+    color: #ecf0f1;
+}
+
+.product-table th, .product-table td {
+    padding: 14px 24px;
+    text-align: left;
+    border-bottom: 1px solid #eaeaea;
+    font-size: 15px;
+}
+
+.product-table tbody tr {
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.product-table tbody tr:hover {
+    background-color: #f7f9fa;
+    transform: scale(1.01);
+}
+
+.product-table a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.product-table a:hover {
+    color: #1abc9c;
+    text-decoration: underline;
+}
+
+/* Base button style */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    margin-right: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    color: #fff;
+}
+
+/* Edit button */
+.btn-edit {
+    background-color: #3498db;
+}
+
+.btn-edit:hover {
+    background-color: #2980b9;
+    box-shadow: 0 0 10px rgba(41, 128, 185, 0.6);
+}
+
+/* Delete button */
+.btn-delete {
+    background-color: #e74c3c;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+    box-shadow: 0 0 10px rgba(192, 57, 43, 0.6);
+}
+
+/* Status badge */
+.product-table .status {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.3s;
+}
+
+.product-table .status.available {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.product-table .status.out-of-stock {
+    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+}
+
+.product-table .status:hover {
+    transform: scale(1.05);
+}
+
+/* End table */
