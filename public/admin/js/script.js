@@ -18,5 +18,29 @@ if (ButtonStatus.length > 0) {
     })
 }
 
-console.log(ButtonStatus);
 // End Button Status
+
+// Form Search
+const formSearch = document.querySelector('#form-search')
+console.log(formSearch);
+if (formSearch) {
+    let url = new URL(window.location.href);
+
+    formSearch.addEventListener('submit', (e) => {
+        console.log("e",e);
+        e.preventDefault()
+
+        const keyword = e.target.elements.keyword.value
+        console.log("keyword",keyword);
+
+        if (keyword) {
+            url.searchParams.set('keyword', keyword);
+        } else {
+            url.searchParams.delete('keyword');
+        }
+
+        window.location.href = url.href;
+    })
+}
+
+//End Form Search

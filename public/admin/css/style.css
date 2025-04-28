@@ -219,4 +219,25 @@
     /* Viền xanh */
 }
 
+.custom-search-input {
+    width: 50%;
+    border-color: #0d6efd;
+    /* Màu viền xanh (Bootstrap primary) */
+    color: #0d6efd;
+    /* Text màu xanh nếu người dùng nhập */
+}
+
+.custom-search-input::placeholder {
+    color: #0d6efd;
+    /* Placeholder màu xanh */
+    opacity: 1;
+    /* Đảm bảo màu hiển thị rõ */
+}
+
+.custom-search-input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    /* Shadow xanh khi focus */
+}
+
 /* End table */
