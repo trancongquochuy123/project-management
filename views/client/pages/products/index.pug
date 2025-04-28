@@ -1,6 +1,24 @@
+
 extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
 
 block main
-  h1 Welcome to the Product Page
-  p This is the Product page of our application.
+  .container.my-3
+    .row
+      .col-12
+        +box-head("Products List")
 
+    .row 
+      each item in products
+        .col-4.mb-3
+          .product-item 
+            .inner-image
+              img(
+                src=item.thumbnail, 
+                alt=item.name
+              )
+            .inner-content 
+              h3.inner-title #{item.title}
+              p.inner-price-old #{item.price}
+              p.inner-price-new #{item.priceNew} 
+              p.inner-discount #{item.discountPercentage} % off
