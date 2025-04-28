@@ -5,7 +5,10 @@ module.exports.index = async (req, res) => {
     try {
         console.log("Fetching products...");
 
-        const products = await Product.find({}).limit(10);
+        const products = await Product.find({
+            deleted: false,
+            status: "active",
+        }).limit(10);
 
         // products.forEach(item => {
         //     item.priceNew = (item.price - (item.price * item.discountPercentage) / 100).toFixed(2); 

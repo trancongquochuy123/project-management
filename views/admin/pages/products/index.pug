@@ -7,39 +7,26 @@ block main
         thead
             tr
                 th ID
+                th Image
                 th Name
                 th Price
                 th Category
                 th Status
                 th Actions
         tbody
-            tr
-                td 1
-                td iPhone 15
-                td $999
-                td Smartphones
-                td
-                    span.status.available Available
-                td
-                    button.btn.btn-edit Edit
-                    button.btn.btn-delete Delete
-            tr
-                td 2
-                td MacBook Pro
-                td $1999
-                td Laptops
-                td
-                    span.status.out-of-stock Out of Stock
-                td
-                    button.btn.btn-edit Edit
-                    button.btn.btn-delete Delete
-            tr
-                td 3
-                td AirPods Pro
-                td $249
-                td Accessories
-                td
-                    span.status.available Available
-                td
-                    button.btn.btn-edit Edit
-                    button.btn.btn-delete Delete
+            each product, index in products
+                tr
+                    td #{index + 1}
+                    td
+                        img(src=product.thumbnail, alt=product.title, class="product-image")
+                    td #{product.title}
+                    td #{product.price} $
+                    td #{product.category}
+                    td
+                        if (product.status == 'active')
+                            a(href="#" class="status available") Active
+                        else
+                            a(href="#" class="status out-of-stock") Active
+                    td
+                        button.btn.btn-edit Edit
+                        button.btn.btn-delete Delete
