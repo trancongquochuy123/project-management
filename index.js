@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const database = require('./config/database.js');
 const route = require('./routes/client/index.route.js');
+const routeAdmin = require('./routes/admin/index.route.js');
 
 database.connect();
 
@@ -17,6 +18,7 @@ app.use(express.static('public'));
 
 // Routes
 route(app);
+routeAdmin(app);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
