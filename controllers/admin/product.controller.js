@@ -20,12 +20,16 @@ module.exports.index = async (req, res) => {
             class: ""
         },
     ]
-    
+
     if (req.query.status) {
-        const index = filterStatus.findIndex(item => item.status === req.query.status);
+        const index = filterStatus.findIndex(
+            item => item.status === req.query.status
+        );
         filterStatus[index].class = "active";
     } else {
-        const index = filterStatus.findIndex(item => item.status === "");
+        const index = filterStatus.findIndex(
+            item => item.status === ""
+        );
         filterStatus[index].class = "active";
     }
 
@@ -37,7 +41,16 @@ module.exports.index = async (req, res) => {
         findProducts.status = req.query.status;
     }
 
-    const products = await Product.find(findProducts).limit(10);
+    let keyword = "";
+
+    if (req.query.keyword) {
+        keyword = req.query.keyword;
+
+        const regex = new RegExp(keyword, "i"); // 'i' for case-insensitive
+        findProducts.title = regex;
+    }
+
+    const products = await Product.find(findProducts);
 
     const newProducts = products.map(item => {
         item.priceNew = (item.price - (item.price * item.discountPercentage) / 100).toFixed(2);
@@ -49,5 +62,6 @@ module.exports.index = async (req, res) => {
         description: "Welcome to the admin products!",
         products: newProducts,
         filterStatus: filterStatus,
+        keyword: keyword,
     });
 }
