@@ -1,18 +1,10 @@
 extend ../../layout/default.pug
 include ../../mixins/filter-status.pug
+include ../../mixins/search.pug
 
 block main 
     h1 Product List
-    form(class="d-flex" role="search" id="form-search")
-        input.form-control.form-control-sm.custom-search-input.mr-2(
-            type="text", 
-            name="keyword",
-            placeholder="Tìm kiếm...", 
-            aria-label="Search"
-            value=keyword
-        )
-        button.btn.btn-outline-primary.btn-sm(type="submit") Tìm kiếm
-
+    +search(keyword)
     h5.mb-2 Bộ lọc trạng thái:
     div.d-flex.align-items-center.gap-3
         +filter-status(filterStatus)

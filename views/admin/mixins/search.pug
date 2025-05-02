@@ -1,0 +1,10 @@
+mixin search(keyword)
+    form(class="d-flex" role="search" id="form-search")
+        input.form-control.form-control-sm.custom-search-input.mr-2(
+            type="text", 
+            name="keyword",
+            placeholder="Tìm kiếm...", 
+            aria-label="Search"
+            value=keyword
+        )
+        button.btn.btn-outline-primary.btn-sm(type="submit") Tìm kiếm

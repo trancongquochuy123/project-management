@@ -2,6 +2,7 @@
 const Product = require("../../models/product.model");
 
 const filterStatusHelper = require("../../helper/filterStatus");
+const searchHelper = require("../../helper/search");
 module.exports.index = async (req, res) => {
     // console.log(req.query.status);
     
@@ -17,13 +18,10 @@ module.exports.index = async (req, res) => {
         findProducts.status = req.query.status;
     }
 
-    let keyword = "";
+    const objectSearch = searchHelper(req.query);
 
-    if (req.query.keyword) {
-        keyword = req.query.keyword;
-
-        const regex = new RegExp(keyword, "i"); // 'i' for case-insensitive
-        findProducts.title = regex;
+    if (objectSearch.keyword) {
+        findProducts.title = objectSearch.regex;
     }
 
     const products = await Product.find(findProducts);
@@ -38,6 +36,6 @@ module.exports.index = async (req, res) => {
         description: "Welcome to the admin products!",
         products: newProducts,
         filterStatus: filterStatus,
-        keyword: keyword,
+        keyword: objectSearch.keyword,
     });
 }
