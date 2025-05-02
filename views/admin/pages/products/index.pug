@@ -1,4 +1,5 @@
 extend ../../layout/default.pug
+include ../../mixins/filter-status.pug
 
 block main 
     h1 Product List
@@ -14,12 +15,7 @@ block main
 
     h5.mb-2 Bộ lọc trạng thái:
     div.d-flex.align-items-center.gap-3
-        div.btn-group(role="group" aria-label="Filter status buttons")
-        each item in filterStatus
-            button(
-                type="button" 
-            class=`btn btn-outline-primary ${item.class}` 
-            button-status=item.status) #{item.name}
+        +filter-status(filterStatus)
     table.product-table
         thead
             tr

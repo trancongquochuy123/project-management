@@ -1,0 +1,8 @@
+mixin filter-status(filterStatus)
+    div.btn-group(role="group" aria-label="Filter status buttons")
+        each item in filterStatus
+            button(
+                type="button" 
+            class=`btn btn-outline-primary ${item.class}` 
+            button-status=item.status) #{item.name}
+
