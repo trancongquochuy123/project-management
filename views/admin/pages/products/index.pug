@@ -1,6 +1,7 @@
 extend ../../layout/default.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
+include ../../mixins/pagination.pug
 
 block main 
     h1 Product List
@@ -21,7 +22,9 @@ block main
         tbody
             each product, index in products
                 tr
-                    td #{index + 1}
+                    - const currentPage = Number(pagination.currentPage);
+                    - const limitItem = Number(pagination.limitItem);
+                    td #{index + 1 + (currentPage - 1) * limitItem}
                     td
                         img(src=product.thumbnail, alt=product.title, class="product-image")
                     td #{product.title}
@@ -36,19 +39,4 @@ block main
                         button.btn.btn-edit Edit
                         button.btn.btn-delete Delete
 
-    nav(aria-label="Page navigation")
-        ul.pagination.justify-content-center.mt-4
-            if (pagination.currentPage != 1)
-                li.page-item
-                    button.page-link(button-pagination=pagination.currentPage - 1) Trước
-
-            - for (var i = 1; i <= pagination.totalPage; i++)
-                li(class=`page-item ${pagination.currentPage == i ? "active" : ""}`)
-                        button(
-                            button-pagination=i
-                        ).page-link(href="#") #{i}    
-
-            if (pagination.currentPage != pagination.totalPage)
-                li.page-item
-                    button.page-link(button-pagination=pagination.currentPage + 1) Sau
-
+    +pagination(pagination)
