@@ -3,7 +3,6 @@ const ButtonStatus = document.querySelectorAll('[button-status]')
 
 if (ButtonStatus.length > 0) {
     let url = new URL(window.location.href);
-    console.log(url);
     ButtonStatus.forEach((button) => {
         button.addEventListener('click', () => {
             const status = button.getAttribute('button-status')
@@ -22,7 +21,6 @@ if (ButtonStatus.length > 0) {
 
 // Form Search
 const formSearch = document.querySelector('#form-search')
-console.log(formSearch);
 if (formSearch) {
     let url = new URL(window.location.href);
 
@@ -50,7 +48,6 @@ const Pagination = document.querySelectorAll('[button-pagination]')
 
 if (Pagination.length > 0) {
     let url = new URL(window.location.href);
-    console.log(url);
     Pagination.forEach((button) => {
         button.addEventListener('click', () => {
             const page = button.getAttribute('button-pagination')

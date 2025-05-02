@@ -32,11 +32,32 @@ block main
                     td #{product.category}
                     td
                         if (product.status == 'active')
-                            a(href="#" class="status available") Active
+                            a(
+                                href="javascript:;"
+                                data-status=product.status
+                                data-id=product._id
+                                button-change-status
+                                class="status available"
+                                ) Active
                         else
-                            a(href="#" class="status out-of-stock") Active
+                            a(
+                                href="javascript:;"
+                                data-status=product.status 
+                                data-id=product._id
+                                button-change-status
+                                class="status out-of-stock"
+                                ) Inactive
                     td
                         button.btn.btn-edit Edit
                         button.btn.btn-delete Delete
 
     +pagination(pagination)
+
+    form(
+        id="form-change-status"
+        action=""
+        method="POST"
+        data-path=`${prefixAdmin}/products/change-status`
+    )
+    
+    script(src="/admin/js/product.js")
