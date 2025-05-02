@@ -8,8 +8,6 @@ module.exports.index = async (req, res) => {
     
     const filterStatus = filterStatusHelper(req.query);
 
-    console.log(filterStatus);
-
     let findProducts = {
         deleted: false,
     };
@@ -20,11 +18,28 @@ module.exports.index = async (req, res) => {
 
     const objectSearch = searchHelper(req.query);
 
-    if (objectSearch.keyword) {
+    if (objectSearch.regex) {
         findProducts.title = objectSearch.regex;
     }
 
-    const products = await Product.find(findProducts);
+    // Pagination
+    let objectPagination = {
+        currentPage: 1,
+        limitItem: 5,
+    }
+
+    if (req.query.page) { 
+        objectPagination.currentPage = parseInt(req.query.page);
+    }
+
+    objectPagination.skip = (objectPagination.currentPage - 1) * objectPagination.limitItem;
+
+    const countProducts = await Product.countDocuments(findProducts);
+    const totalPage = Math.ceil(countProducts / objectPagination.limitItem);
+    objectPagination.totalPage = totalPage;
+    // End Pagination
+
+    const products = await Product.find(findProducts).limit(objectPagination.limitItem).skip(objectPagination.skip);
 
     const newProducts = products.map(item => {
         item.priceNew = (item.price - (item.price * item.discountPercentage) / 100).toFixed(2);
@@ -37,5 +52,6 @@ module.exports.index = async (req, res) => {
         products: newProducts,
         filterStatus: filterStatus,
         keyword: objectSearch.keyword,
+        pagination: objectPagination,
     });
 }

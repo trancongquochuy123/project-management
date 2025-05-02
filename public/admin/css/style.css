@@ -210,7 +210,8 @@
 
 .btn-outline-primary:hover,
 .btn-outline-primary.active,
-.btn-outline-primary:active {
+.btn-outline-primary:active,
+.page-item.active {
     background-color: #0d6efd;
     /* Nền xanh */
     color: #fff;

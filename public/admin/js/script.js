@@ -44,3 +44,25 @@ if (formSearch) {
 }
 
 //End Form Search
+
+// Pagination
+const Pagination = document.querySelectorAll('[button-pagination]')
+
+if (Pagination.length > 0) {
+    let url = new URL(window.location.href);
+    console.log(url);
+    Pagination.forEach((button) => {
+        button.addEventListener('click', () => {
+            const page = button.getAttribute('button-pagination')
+
+            if (page) {
+                url.searchParams.set('page', page);
+            } else {
+                url.searchParams.delete('page');
+            }
+            window.location.href = url.href;
+        })
+    })
+}
+
+// End Pagination
