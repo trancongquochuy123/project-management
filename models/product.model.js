@@ -42,6 +42,7 @@ const productSchema = new mongoose.Schema(
         images: [String],
         thumbnail: { type: String },
         deleted: { type: Boolean, default: false },
+        deletedAt: { type: Date },
         status: { type: String, enum: ['active', 'inactive'], default: 'active' },
     }
 );
