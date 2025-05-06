@@ -68,7 +68,11 @@ block main
                                 ) Inactive
                     td
                         button.btn.btn-edit Edit
-                        button.btn.btn-delete Delete
+                        button(
+                            class="btn btn-delete"
+                            data-id=product._id
+                            button-delete
+                        ) Delete
 
     +pagination(pagination)
 
@@ -78,5 +82,13 @@ block main
         method="POST"
         data-path=`${prefixAdmin}/products/change-status`
     )
+
+    form(
+        id="form-delete-item"
+        action=""
+        method="POST"
+        data-path=`${prefixAdmin}/products/delete`
+    )
+
     
     script(src="/admin/js/product.js")
