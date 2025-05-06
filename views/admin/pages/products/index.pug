@@ -2,6 +2,7 @@ extend ../../layout/default.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
 include ../../mixins/pagination.pug
+include ../../mixins/form-change-multi.pug
 
 block main 
     h1 Product List
@@ -9,24 +10,11 @@ block main
     h5.mb-2 Bộ lọc trạng thái:
     div.d-flex.align-items-center.gap-3
         +filter-status(filterStatus)
-
-    form(
-        action=`${prefixAdmin}/products/change-multi?_method=PATCH`
-        method="POST"
-        form-change-multi
-        class="form-change-multi"
+    
+    +form-change-multi(
+        `${prefixAdmin}/products/change-multi?_method=PATCH`
     )
-        select.form-select(name="type")
-            option(value="active") Active
-            option(value="inactive") Inactive
 
-        input.form-control.d-none(
-            type="text"
-            name="ids"
-            placeholder="Enter product IDs"
-        )
-
-        button.btn.btn-primary(type="submit") Apply
     table(
         class="product-table"
         checkbox-multi

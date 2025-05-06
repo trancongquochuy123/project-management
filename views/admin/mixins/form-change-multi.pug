@@ -1,0 +1,18 @@
+mixin form-change-multi(path)
+    form(
+        action=path
+        method="POST"
+        form-change-multi
+        class="form-change-multi"
+    )
+        select.form-select(name="type")
+            option(value="active") Active
+            option(value="inactive") Inactive
+
+        input.form-control.d-none(
+            type="text"
+            name="ids"
+            placeholder="Enter product IDs"
+        )
+
+        button.btn.btn-primary(type="submit") Apply
