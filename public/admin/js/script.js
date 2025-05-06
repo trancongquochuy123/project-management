@@ -1,3 +1,4 @@
+
 // Button Status
 const ButtonStatus = document.querySelectorAll('[button-status]')
 
@@ -25,11 +26,11 @@ if (formSearch) {
     let url = new URL(window.location.href);
 
     formSearch.addEventListener('submit', (e) => {
-        console.log("e",e);
+        console.log("e", e);
         e.preventDefault()
 
         const keyword = e.target.elements.keyword.value
-        console.log("keyword",keyword);
+        console.log("keyword", keyword);
 
         if (keyword) {
             url.searchParams.set('keyword', keyword);
@@ -63,3 +64,86 @@ if (Pagination.length > 0) {
 }
 
 // End Pagination
+
+// Checkbox Multi
+const checkboxMulti = document.querySelector('[checkbox-multi]')
+
+if (checkboxMulti) {
+    const inputCheckAll = document.querySelector('input[name="check-all"]')
+    const inputsId = document.querySelectorAll('input[name="id"]')
+
+    inputCheckAll.addEventListener('click', () => {
+        if (inputCheckAll.checked) {
+            inputsId.forEach((item) => {
+                item.checked = true
+            })
+        } else {
+            inputsId.forEach((item) => {
+                item.checked = false
+            })
+        }
+    })
+
+    inputsId.forEach((item) => {
+        item.addEventListener('click', () => {
+
+            const countChecked = checkboxMulti.querySelectorAll(
+                'input[name="id"]:checked'
+            ).length
+
+            if (countChecked === inputsId.length) {
+                inputCheckAll.checked = true
+            }
+            else {
+                inputCheckAll.checked = false
+            }
+        })
+    })
+
+}
+// End Checkbox Multi
+
+// Form Change Multi
+const formChangeMulti = document.querySelector('[form-change-multi]')
+if (formChangeMulti) {
+    formChangeMulti.addEventListener('submit', (e) => {
+        e.preventDefault()
+
+        const checkboxMulti = document.querySelector('[checkbox-multi]')
+        const inputsChecked = checkboxMulti.querySelectorAll(
+            'input[name="id"]:checked'
+        )
+
+        if (inputsChecked.length > 0) {
+            let ids = []
+            const inputIds = formChangeMulti.querySelector('input[name="ids"]')
+            inputsChecked.forEach((item) => {
+                const id = item.value
+                ids.push(id)
+            })
+
+            
+            inputIds.value = ids.join(', ')
+            console.log("inputIds.value", inputIds.value);
+            formChangeMulti.submit()
+            
+        } else {
+            alert("Vui lòng chọn ít nhất một sản phẩm")
+        }
+
+        // const inputsId = formChangeMulti.querySelectorAll('input[name="id"]:checked')
+        // const status = formChangeMulti.querySelector('select[name="status"]').value
+
+        // if (inputsId.length > 0) {
+        //     const ids = Array.from(inputsId).map((item) => item.value).join(',')
+        //     const action = formChangeMulti.getAttribute('data-path') + `/${status}/${ids}?_method=PATCH`
+
+        //     formChangeMulti.action = action
+        //     formChangeMulti.submit()
+        // } else {
+        //     alert("Vui lòng chọn ít nhất một sản phẩm")
+        // }
+    })
+    
+}
+// End Form Change Multi

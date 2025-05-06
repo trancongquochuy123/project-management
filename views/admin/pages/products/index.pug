@@ -9,9 +9,34 @@ block main
     h5.mb-2 Bộ lọc trạng thái:
     div.d-flex.align-items-center.gap-3
         +filter-status(filterStatus)
-    table.product-table
+
+    form(
+        action=`${prefixAdmin}/products/change-multi?_method=PATCH`
+        method="POST"
+        form-change-multi
+        class="form-change-multi"
+    )
+        select.form-select(name="type")
+            option(value="active") Active
+            option(value="inactive") Inactive
+
+        input.form-control.d-none(
+            type="text"
+            name="ids"
+            placeholder="Enter product IDs"
+        )
+
+        button.btn.btn-primary(type="submit") Apply
+    table(
+        class="product-table"
+        checkbox-multi
+    )
         thead
             tr
+                th 
+                  input(
+                    type="checkbox"
+                    name="check-all")
                 th ID
                 th Image
                 th Name
@@ -21,7 +46,13 @@ block main
                 th Actions
         tbody
             each product, index in products
-                tr
+                tr  
+                    td 
+                        input(
+                            type="checkbox"
+                            name="id"
+                            value=product._id
+                        )
                     - const currentPage = Number(pagination.currentPage);
                     - const limitItem = Number(pagination.limitItem);
                     td #{index + 1 + (currentPage - 1) * limitItem}

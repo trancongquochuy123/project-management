@@ -238,7 +238,54 @@
 .custom-search-input:focus {
     border-color: #0d6efd;
     box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-    /* Shadow xanh khi focus */
 }
+
+.form-change-multi {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-change-multi .form-group {
+    display: flex;
+    flex-direction: row;
+    min-width: 200px;
+}
+
+.form-change-multi .form-select,
+.form-change-multi .form-control {
+    display: flex;
+    width: 50%;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.2s;
+}
+
+.form-change-multi .form-control {
+    width: 50%;
+}
+.form-change-multi .form-select{
+    width: 20%;
+}
+
+
+.form-change-multi .form-select:focus,
+.form-change-multi .form-control:focus {
+    border-color: #86b7fe;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.form-change-multi button.btn {
+    min-width: 100px;
+    padding: 0.5rem 1rem;
+}
+
 
 /* End table */
