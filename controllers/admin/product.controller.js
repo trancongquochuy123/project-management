@@ -85,6 +85,8 @@ module.exports.changeStatus = async (req, res) => {
 
     await Product.findByIdAndUpdate(id, { status: status });
 
+    req.flash('success', 'Change status product successfully!');
+
     res.redirect(req.get('referer') || '/admin/products');
 }
 
@@ -96,24 +98,31 @@ module.exports.changeMulti = async (req, res) => {
     switch (type) {
         case "active":
             await Product.updateMany({ _id: { $in: ids } }, { status: "active" });
+            req.flash('success', `Change status of ${ids.length} product successfully!`);
             break;
         case "inactive":
             await Product.updateMany({ _id: { $in: ids } }, { status: "inactive" });
+            req.flash('success', `Change status of ${ids.length} product successfully!`);
             break;
         case "delete-all":
             await Product.updateMany({ _id: { $in: ids } }, {
                 deleted: true,
                 deletedAt: new Date()
             });
+            req.flash('success', `Delete ${ids.length} product successfully!`);
+            break;
         case "change-position":
             ids.forEach(async (item) => {
                 let [id, position] = item.split("-");
                 position = parseInt(position);
                 await Product.findByIdAndUpdate(id, {position: position});
             })
+            req.flash('success', `Change position of ${ids.length} product successfully!`);
+            break;
         default:
             break;
     }
+
 
     res.redirect(req.get('referer') || '/admin/products');
 }
