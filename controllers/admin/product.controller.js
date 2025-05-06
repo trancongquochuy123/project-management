@@ -39,17 +39,37 @@ module.exports.index = async (req, res) => {
 
     // End Pagination
 
-    const products = await Product.find(findProducts).limit(objectPagination.limitItem).skip(objectPagination.skip);
+    const products = await Product.find(findProducts)
+    .sort({ position: "desc" })
+    .limit(objectPagination.limitItem)
+    .skip(objectPagination.skip);
 
     const newProducts = products.map(item => {
         item.priceNew = (item.price - (item.price * item.discountPercentage) / 100).toFixed(2);
         return item;
     });
 
+    // Lỗi do schema của mongoose trả về là một object chứ không phải là một plain JS object (cụ thể hơn
+    // Kiểu	| Có truy cập được position không? | Ghi chú
+    // item (Mongoose document) |	❌ Có thể undefined nếu không trong schema hoặc không được chọn | Mongoose không hiển thị hết các trường tùy config
+    // item.toObject()	| ✅ Truy cập đầy đủ các trường | Plain JavaScript object
+    // )
+    // const newProducts = products.map(item => {
+    //     const plainItem = item.toObject(); // chuyển về plain JS object
+    
+    //     plainItem.priceNew = (plainItem.price - (plainItem.price * plainItem.discountPercentage) / 100).toFixed(2);
+        
+    //     console.log(plainItem.position); // now '100'
+    //     plainItem.position = Number(plainItem.position);
+    //     console.log(plainItem.position); // now 100
+    
+    //     return plainItem;
+    // });
+
     res.render("admin/pages/products/index.pug", {
         pageTitle: "Products",
         description: "Welcome to the admin products!",
-        products: newProducts,
+        products: newProducts,        
         filterStatus: filterStatus,
         keyword: objectSearch.keyword,
         pagination: objectPagination,
@@ -80,6 +100,17 @@ module.exports.changeMulti = async (req, res) => {
         case "inactive":
             await Product.updateMany({ _id: { $in: ids } }, { status: "inactive" });
             break;
+        case "delete-all":
+            await Product.updateMany({ _id: { $in: ids } }, {
+                deleted: true,
+                deletedAt: new Date()
+            });
+        case "change-position":
+            ids.forEach(async (item) => {
+                let [id, position] = item.split("-");
+                position = parseInt(position);
+                await Product.findByIdAndUpdate(id, {position: position});
+            })
         default:
             break;
     }

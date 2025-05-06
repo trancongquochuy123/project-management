@@ -6,8 +6,11 @@ mixin form-change-multi(path)
         class="form-change-multi"
     )
         select.form-select(name="type")
+            option(disabled selected) Select action
             option(value="active") Active
             option(value="inactive") Inactive
+            option(value="delete-all") Delete all
+            option(value="change-position") Change position
 
         input.form-control.d-none(
             type="text"

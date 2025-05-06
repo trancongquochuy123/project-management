@@ -114,23 +114,43 @@ if (formChangeMulti) {
             'input[name="id"]:checked'
         )
 
+        const typeChange = formChangeMulti.querySelector('select[name="type"]').value
+        console.log("typeChange", typeChange);
+
+        if (typeChange === "delete-all") {
+            const isConfirm = confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")
+            if (!isConfirm) {
+                return
+            }
+        }
+
         if (inputsChecked.length > 0) {
             let ids = []
             const inputIds = formChangeMulti.querySelector('input[name="ids"]')
+
             inputsChecked.forEach((item) => {
                 const id = item.value
-                ids.push(id)
+
+                if (typeChange === "change-position") {
+                    const position = item
+                        .closest("tr")
+                        .querySelector("input[name='position']").value
+
+                    ids.push(`${id}-${position}`)
+                } else {
+                    ids.push(id)
+                }
             })
 
-            
             inputIds.value = ids.join(', ')
-            console.log("inputIds.value", inputIds.value);
+
             formChangeMulti.submit()
-            
+
         } else {
             alert("Vui lòng chọn ít nhất một sản phẩm")
         }
 
+        // Cách khác cho update nhiều sản phẩm
         // const inputsId = formChangeMulti.querySelectorAll('input[name="id"]:checked')
         // const status = formChangeMulti.querySelector('select[name="status"]').value
 
@@ -144,6 +164,6 @@ if (formChangeMulti) {
         //     alert("Vui lòng chọn ít nhất một sản phẩm")
         // }
     })
-    
+
 }
 // End Form Change Multi

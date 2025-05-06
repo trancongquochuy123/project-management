@@ -29,6 +29,7 @@ block main
                 th Image
                 th Name
                 th Price
+                th Position
                 th Category
                 th Status
                 th Actions
@@ -48,6 +49,15 @@ block main
                         img(src=product.thumbnail, alt=product.title, class="product-image")
                     td #{product.title}
                     td #{product.price} $
+                    td 
+                        input(
+                        class="form-control"
+                        style="width: 150px;"
+                        type="number"
+                        value=product.position
+                        min=1
+                        name="position"
+                        )
                     td #{product.category}
                     td
                         if (product.status == 'active')

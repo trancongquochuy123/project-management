@@ -44,6 +44,7 @@ const productSchema = new mongoose.Schema(
         deleted: { type: Boolean, default: false },
         deletedAt: { type: Date },
         status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+        position: { type: Number}
     }
 );
 
