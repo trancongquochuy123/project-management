@@ -7,6 +7,7 @@ block main
         action=`${prefixAdmin}/products/create`
         method="POST"
         id="form-create-product"
+        enctype="multipart/form-data"
     )
         .row.g-3
             .col-6
@@ -36,8 +37,8 @@ block main
 
             .col-6
                 .form-group
-                    label(for="thumbnail") Thumbnail (URL)
-                    input.form-control(type="url" name="thumbnail" id="thumbnail")
+                    label(for="thumbnail") Thumbnail
+                    input.form-control(type="file" name="thumbnail" id="thumbnail" accept="image/*")
 
             .col-4
                 .form-group

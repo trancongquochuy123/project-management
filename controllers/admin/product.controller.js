@@ -159,6 +159,10 @@ module.exports.createProduct = async (req, res) => {
         req.body.position = countProducts + 1;
     }
     
+    if (req.file) { 
+        req.body.thumbnail = `/uploads/${req.file.filename}`;
+        // req.body.thumbnail = req.file.path.replace(/\\/g, "/").replace("public", "");
+    }
     const product = new Product(req.body);
     await product.save();
     req.flash('success', 'Create product successfully!');
