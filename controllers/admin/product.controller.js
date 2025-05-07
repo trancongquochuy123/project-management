@@ -1,14 +1,14 @@
 const Product = require("../../models/product.model");
 
+const systemConfig = require("../../config/system");
+
 const filterStatusHelper = require("../../helper/filterStatus");
 const searchHelper = require("../../helper/search");
 const paginationHelper = require("../../helper/pagination");
 
-// [GET] admin/products
+// [GET] /products
 
 module.exports.index = async (req, res) => {
-    // console.log(req.query.status);
-
     const filterStatus = filterStatusHelper(req.query);
 
     let findProducts = {
@@ -87,7 +87,7 @@ module.exports.changeStatus = async (req, res) => {
 
     req.flash('success', 'Change status product successfully!');
 
-    res.redirect(req.get('referer') || '/admin/products');
+    res.redirect(req.get('referer') || `${systemConfig.prefixAdmin}/products`);
 }
 
 // [PATCH] admin/products/change-multi
@@ -124,7 +124,7 @@ module.exports.changeMulti = async (req, res) => {
     }
 
 
-    res.redirect(req.get('referer') || '/admin/products');
+    res.redirect(req.get('referer') || `${systemConfig.prefixAdmin}/products`);
 }
 
 // [DELETE] admin/products/delete/:id
@@ -136,5 +136,32 @@ module.exports.deleteItem = async (req, res) => {
         deletedAt: new Date()
     });
 
-    res.redirect(req.get('referer') || '/admin/products');
+    res.redirect(req.get('referer') || `${systemConfig.prefixAdmin}/products`);
 }
+
+// [GET] admin/products/create
+module.exports.create = async (req, res) => {
+    res.render("admin/pages/products/create.pug", {
+        pageTitle: "Create Product",
+    });
+}
+
+// [POST] admin/products/create
+module.exports.createProduct = async (req, res) => {
+    req.body.price = parseFloat(req.body.price);
+    req.body.discountPercentage = parseFloat(req.body.discountPercentage);
+    req.body.stock = parseFloat(req.body.stock);
+
+    if (req.body.position != "") {
+        req.body.position = parseInt(req.body.position);
+    } else {
+        const countProducts = await Product.countDocuments();
+        req.body.position = countProducts + 1;
+    }
+    
+    const product = new Product(req.body);
+    await product.save();
+    req.flash('success', 'Create product successfully!');
+
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
+}   

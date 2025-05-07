@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slug = require('mongoose-slug-updater');
 
 const reviewSchema = new mongoose.Schema({
     rating: { type: Number, required: true },
@@ -10,7 +11,7 @@ const reviewSchema = new mongoose.Schema({
 
 const productSchema = new mongoose.Schema(
     {
-        id: { type: Number, unique: true, required: true },
+        // id: { type: Number, unique: true, required: true },
         title: { type: String, required: true },
         description: { type: String },
         category: { type: String },
@@ -44,7 +45,11 @@ const productSchema = new mongoose.Schema(
         deleted: { type: Boolean, default: false },
         deletedAt: { type: Date },
         status: { type: String, enum: ['active', 'inactive'], default: 'active' },
-        position: { type: Number}
+        position: { type: Number},
+        slug: { type: String, slug: "title", unique: true },
+    },
+    {
+        timestamps: true,
     }
 );
 

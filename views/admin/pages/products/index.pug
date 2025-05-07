@@ -14,9 +14,16 @@ block main
     div.d-flex.align-items-center.gap-3
         +filter-status(filterStatus)
     
-    +form-change-multi(
-        `${prefixAdmin}/products/change-multi?_method=PATCH`
-    )
+    .row 
+        .col-6
+            +form-change-multi(
+                `${prefixAdmin}/products/change-multi?_method=PATCH`
+            )
+        .col-6.text-end
+            a(
+                href=`${prefixAdmin}/products/create`
+                class="btn btn-primary"
+            ) Create Products
 
     table(
         class="product-table"

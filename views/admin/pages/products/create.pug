@@ -1,0 +1,57 @@
+extend ../../layout/default.pug
+
+block main
+    h1 Create Product
+    
+    form(
+        action=`${prefixAdmin}/products/create`
+        method="POST"
+        id="form-create-product"
+    )
+        .row.g-3
+            .col-6
+                .form-group
+                    label(for="title") Title
+                    input.form-control(type="text" name="title" id="title" placeholder="Product title" required)
+
+            .col-6
+                .form-group
+                    label(for="description") Description
+                    textarea.form-control(name="description" id="description" rows="3" placeholder="Product description")
+
+            .col-3
+                .form-group
+                    label(for="price") Price
+                    input.form-control(type="text" name="price" id="price" )
+
+            .col-3
+                .form-group
+                    label(for="discountPercentage") Discount (%)
+                    input.form-control(type="text" name="discountPercentage" id="discountPercentage")
+
+            .col-3
+                .form-group
+                    label(for="stock") Stock
+                    input.form-control(type="text" name="stock" id="stock")
+
+            .col-6
+                .form-group
+                    label(for="thumbnail") Thumbnail (URL)
+                    input.form-control(type="url" name="thumbnail" id="thumbnail")
+
+            .col-4
+                .form-group
+                    label(for="status") Status
+                    select.form-control(name="status" id="status")
+                        option(value="active") Active
+                        option(value="inactive") Inactive
+
+            .col-4
+                .form-group
+                    label(for="position") Position
+                    input.form-control(type="number" name="position" id="position" placeholder="Auto Increase" )
+
+            .col-12.text-end.mt-4
+                button.btn.btn-primary(type='submit') Create Product
+
+    script(src="/admin/js/product.js")
