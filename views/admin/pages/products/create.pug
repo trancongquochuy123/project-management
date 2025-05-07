@@ -2,7 +2,7 @@ extend ../../layout/default.pug
 
 block main
     h1 Create Product
-    
+
     form(
         action=`${prefixAdmin}/products/create`
         method="POST"
@@ -36,9 +36,14 @@ block main
                     input.form-control(type="text" name="stock" id="stock")
 
             .col-6
-                .form-group
+                div(
+                    class="form-group image-preview" 
+                    upload-image
+                )
                     label(for="thumbnail") Thumbnail
-                    input.form-control(type="file" name="thumbnail" id="thumbnail" accept="image/*")
+                    input.form-control(type="file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-input)
+                    img.form-img-preview( src="" upload-image-preview)
+                    button.close-button(type="button" upload-image-remove class="d-none") X
 
             .col-4
                 .form-group
@@ -56,3 +61,4 @@ block main
                 button.btn.btn-primary(type='submit') Create Product
 
     script(src="/admin/js/product.js")
+    script(src="/admin/js/script.js")

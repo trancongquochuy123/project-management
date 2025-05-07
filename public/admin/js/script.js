@@ -182,5 +182,38 @@ if (showAlert) {
 
 }
 
-
 // End Show Alert Timeout
+
+// Preview Image
+const uploadImage = document.querySelector('[upload-image]')
+if (uploadImage) {
+    const uploadImageInput = document.querySelector('[upload-image-input]')
+    const uploadImagePreview = document.querySelector('[upload-image-preview]')
+    const uploadImageRemove = document.querySelector('[upload-image-remove]')
+
+    uploadImageInput.addEventListener('change', (e) => {
+        const file = e.target.files[0]
+
+        if (file) {
+            // const reader = new FileReader()
+            // reader.onload = function (event) {
+            //     uploadImagePreview.src = event.target.result
+            // }
+            // reader.readAsDataURL(file)
+            uploadImagePreview.src = URL.createObjectURL(file)
+            uploadImageRemove.classList.remove('d-none')
+        } else {
+            uploadImagePreview.src = ''
+
+        }
+    })
+
+    if (uploadImageRemove) {
+        uploadImageRemove.addEventListener('click', () => {
+            uploadImagePreview.src = ''
+            uploadImageInput.value = ''
+            uploadImageRemove.classList.add('d-none')
+        })
+    }
+}
+// End Preview Image
