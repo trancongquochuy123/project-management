@@ -1,7 +1,9 @@
-extend ../../layout/default.pug
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
 
 block main
     h1 Create Product
+    +alert-error(5000)
 
     form(
         action=`${prefixAdmin}/products/create`

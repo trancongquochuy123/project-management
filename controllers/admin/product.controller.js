@@ -148,6 +148,7 @@ module.exports.create = async (req, res) => {
 
 // [POST] admin/products/create
 module.exports.createProduct = async (req, res) => {
+
     req.body.price = parseFloat(req.body.price);
     req.body.discountPercentage = parseFloat(req.body.discountPercentage);
     req.body.stock = parseFloat(req.body.stock);
@@ -165,6 +166,7 @@ module.exports.createProduct = async (req, res) => {
     }
     const product = new Product(req.body);
     await product.save();
+
     req.flash('success', 'Create product successfully!');
 
     res.redirect(`${systemConfig.prefixAdmin}/products`);
