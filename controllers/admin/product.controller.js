@@ -40,9 +40,9 @@ module.exports.index = async (req, res) => {
     // End Pagination
 
     const products = await Product.find(findProducts)
-    .sort({ position: "desc" })
-    .limit(objectPagination.limitItem)
-    .skip(objectPagination.skip);
+        .sort({ position: "desc" })
+        .limit(objectPagination.limitItem)
+        .skip(objectPagination.skip);
 
     const newProducts = products.map(item => {
         item.priceNew = (item.price - (item.price * item.discountPercentage) / 100).toFixed(2);
@@ -56,20 +56,20 @@ module.exports.index = async (req, res) => {
     // )
     // const newProducts = products.map(item => {
     //     const plainItem = item.toObject(); // chuyển về plain JS object
-    
+
     //     plainItem.priceNew = (plainItem.price - (plainItem.price * plainItem.discountPercentage) / 100).toFixed(2);
-        
+
     //     console.log(plainItem.position); // now '100'
     //     plainItem.position = Number(plainItem.position);
     //     console.log(plainItem.position); // now 100
-    
+
     //     return plainItem;
     // });
 
     res.render("admin/pages/products/index.pug", {
         pageTitle: "Products",
         description: "Welcome to the admin products!",
-        products: newProducts,        
+        products: newProducts,
         filterStatus: filterStatus,
         keyword: objectSearch.keyword,
         pagination: objectPagination,
@@ -115,7 +115,7 @@ module.exports.changeMulti = async (req, res) => {
             ids.forEach(async (item) => {
                 let [id, position] = item.split("-");
                 position = parseInt(position);
-                await Product.findByIdAndUpdate(id, {position: position});
+                await Product.findByIdAndUpdate(id, { position: position });
             })
             req.flash('success', `Change position of ${ids.length} product successfully!`);
             break;
@@ -130,8 +130,8 @@ module.exports.changeMulti = async (req, res) => {
 // [DELETE] admin/products/delete/:id
 module.exports.deleteItem = async (req, res) => {
     const id = req.params.id;
-    
-    await Product.findByIdAndUpdate(id, { 
+
+    await Product.findByIdAndUpdate(id, {
         deleted: true,
         deletedAt: new Date()
     });
@@ -148,7 +148,6 @@ module.exports.create = async (req, res) => {
 
 // [POST] admin/products/create
 module.exports.createProduct = async (req, res) => {
-
     req.body.price = parseFloat(req.body.price);
     req.body.discountPercentage = parseFloat(req.body.discountPercentage);
     req.body.stock = parseFloat(req.body.stock);
@@ -159,8 +158,8 @@ module.exports.createProduct = async (req, res) => {
         const countProducts = await Product.countDocuments();
         req.body.position = countProducts + 1;
     }
-    
-    if (req.file) { 
+
+    if (req.file) {
         req.body.thumbnail = `/uploads/${req.file.filename}`;
         // req.body.thumbnail = req.file.path.replace(/\\/g, "/").replace("public", "");
     }
@@ -170,4 +169,57 @@ module.exports.createProduct = async (req, res) => {
     req.flash('success', 'Create product successfully!');
 
     res.redirect(`${systemConfig.prefixAdmin}/products`);
+}
+
+// [GET] admin/products/edit/:id
+module.exports.edit = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const find = {
+            _id: id,
+            deleted: false,
+        };
+        const product = await Product.findOne(find);
+
+        if (!product) {
+            req.flash('error', 'Product not found!');
+            return res.redirect(`${systemConfig.prefixAdmin}/products`);
+        }
+
+        res.render("admin/pages/products/edit.pug", {
+            pageTitle: "Edit Product",
+            product: product,
+        });
+    }
+    catch (error) {
+        console.error("Error in edit product:", error);
+        req.flash('error', 'An error occurred while editing the product.');
+        res.redirect(`${systemConfig.prefixAdmin}/products`);
+    }
+}
+
+// [PATCH] admin/products/edit/:id
+module.exports.editPatch = async (req, res) => {
+    req.body.price = parseFloat(req.body.price);
+    req.body.discountPercentage = parseFloat(req.body.discountPercentage);
+    req.body.stock = parseFloat(req.body.stock);
+    req.body.position = parseInt(req.body.position);
+
+    if (req.file) {
+        req.body.thumbnail = `/uploads/${req.file.filename}`;
+        // req.body.thumbnail = req.file.path.replace(/\\/g, "/").replace("public", "");
+    }
+    try {
+        await Product.findByIdAndUpdate(
+            { _id: req.params.id },
+            req.body
+        ) 
+        req.flash('success', 'Update product successfully!')
+    } catch (error) {
+        req.flash('error', 'An error occurred while updating the product.');
+    }
+
+    res.redirect(`${systemConfig.prefixAdmin}/products`);
+
 }   

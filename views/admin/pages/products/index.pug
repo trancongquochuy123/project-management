@@ -13,7 +13,7 @@ block main
     h5.mb-2 Bộ lọc trạng thái:
     div.d-flex.align-items-center.gap-3
         +filter-status(filterStatus)
-    
+
     .row 
         .col-6
             +form-change-multi(
@@ -32,9 +32,9 @@ block main
         thead
             tr
                 th 
-                  input(
-                    type="checkbox"
-                    name="check-all")
+                    input(
+                        type="checkbox"
+                        name="check-all")
                 th ID
                 th Image
                 th Name
@@ -87,7 +87,11 @@ block main
                                 class="status out-of-stock"
                                 ) Inactive
                     td
-                        button.btn.btn-edit Edit
+                        a(
+                            href=`${prefixAdmin}/products/edit/${product._id}`
+                            class="btn btn-edit"
+                        ) Edit
+
                         button(
                             class="btn btn-delete"
                             data-id=product._id
@@ -110,5 +114,5 @@ block main
         data-path=`${prefixAdmin}/products/delete`
     )
 
-    
+
     script(src="/admin/js/product.js")
