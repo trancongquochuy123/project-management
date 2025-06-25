@@ -221,5 +221,32 @@ module.exports.editPatch = async (req, res) => {
     }
 
     res.redirect(`${systemConfig.prefixAdmin}/products`);
-
 }   
+
+// [GET] admin/products/detail/:id
+module.exports.detail = async (req, res) => {
+        try {
+        const id = req.params.id;
+
+        const find = {
+            _id: id,
+            deleted: false,
+        };
+        const product = await Product.findOne(find);
+
+        if (!product) {
+            req.flash('error', 'Product not found!');
+            return res.redirect(`${systemConfig.prefixAdmin}/products`);
+        }
+
+        res.render("admin/pages/products/detail.pug", {
+            pageTitle: product.title,
+            product: product,
+        });
+    }
+    catch (error) {
+        console.error("Error in product:", error);
+        req.flash('error', 'An error occurred in the product.');
+        res.redirect(`${systemConfig.prefixAdmin}/products`);
+    }
+}
