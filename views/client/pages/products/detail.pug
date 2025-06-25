@@ -1,0 +1,93 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container
+        h1 Product Detail - #{product.title}
+
+        .row
+            .col-6(class="d-flex flex-column justify-content-start align-items-center")
+                img(src=product.thumbnail alt=product.title class=" img-fluid")
+                .image-gallery.mt-3
+                    each image in product.images
+                        img(src=image alt="Product Image" style="width: 100px; margin-right: 5px")
+
+            .col-6
+                h2 #{product.title}
+                p.text-muted #{product.category}
+                p #{product.description}
+
+                p
+                    strong Price: $
+                    | #{product.price.toFixed(2)}
+                    if product.discountPercentage
+                        span.text-success &nbsp;(-#{product.discountPercentage}% Off)
+
+                p
+                    strong Rating:
+                    | #{" "} #{product.rating} / 5
+
+                p
+                    strong Availability:
+                    span.text-primary &nbsp; #{" "} #{product.availabilityStatus}
+
+                p
+                    strong SKU:
+                    | #{" "} #{product.sku}
+                p
+                    strong Barcode:
+                    | #{product.meta.barcode}
+                p
+                    strong QR Code:
+                    br
+                    img(src=product.meta.qrCode alt="QR Code" width="100")
+
+                p
+                    strong Warranty:
+                    | #{" "} #{product.warrantyInformation}
+                p
+                    strong Shipping Info:
+                    | #{" "} #{product.shippingInformation}
+                p
+                    strong Return Policy:
+                    | #{" "} #{product.returnPolicy}
+                p
+                    strong Minimum Order Quantity:
+                    | #{" "} #{product.minimumOrderQuantity}
+
+                p
+                    strong Dimensions:
+                    ul
+                        li Width: #{" "} #{product.dimensions.width} cm
+                        li Height: #{" "} #{product.dimensions.height} cm
+                        li Depth: #{" "} #{product.dimensions.depth} cm
+
+                p
+                    strong Weight:
+                    | #{" "} #{product.weight} kg
+
+                p
+                    strong Status:
+                    | #{" "} #{product.status == 'active' ? 'Active' : 'Inactive'}
+                p
+                    strong Position:
+                    | #{" "} #{product.position}
+
+                p
+                    small Created At: #{product.meta.createdAt.toLocaleString()}
+                    br
+                    small Last Updated: #{product.meta.updatedAt.toLocaleString()}
+
+        hr
+
+        h3.mt-5 Reviews
+        if product.reviews.length
+            each review in product.reviews
+                .card.mb-3
+                    .card-body
+                        h5.card-title #{review.reviewerName} (#{review.rating}/5)
+                        h6.card-subtitle.text-muted #{review.reviewerEmail}
+                        p.card-text.mt-2 #{review.comment}
+                        small.text-muted Date: #{review.date.toLocaleString()}
+        else
+            p.text-muted No reviews yet.

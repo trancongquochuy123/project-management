@@ -18,7 +18,9 @@ block main
                 alt=item.name
               )
             .inner-content 
-              h3.inner-title #{item.title}
+              a.inner-title(
+                href=`/products/${item.slug}`
+              ) #{item.title}
               p.inner-price-old #{item.price}
               p.inner-price-new #{item.priceNew} 
               p.inner-discount #{item.discountPercentage} % off

@@ -14,7 +14,7 @@ module.exports.index = async (req, res) => {
         // });
 
         const newProducts = products.map(item => {
-            item.priceNew = (item.price - (item.price * item.discountPercentage) / 100).toFixed(2); 
+            item.priceNew = (item.price - (item.price * item.discountPercentage) / 100).toFixed(2);
             return item;
         });
 
@@ -29,3 +29,24 @@ module.exports.index = async (req, res) => {
     }
 };
 
+
+// [GET] /products/:slug
+module.exports.detail = async (req, res) => {
+    const slug = req.params.slug;
+    try {
+        const product = await Product.findOne({ slug: slug, deleted: false, status: "active" });
+        if (!product) {
+            return res.status(404).send("Product not found");
+        }
+        product.priceNew = (product.price - (product.price * product.discountPercentage) / 100).toFixed(2);
+        res.render("client/pages/products/detail.pug", {
+            pageTitle: product.title,
+            description: product.description || "Product details",
+            product: product,
+        });
+    } catch (err) {
+        console.error("Error fetching product details:", err);
+        res.status(500).send("Internal Server Error");
+
+    }
+}

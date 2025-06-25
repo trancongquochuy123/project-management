@@ -208,20 +208,31 @@ module.exports.editPatch = async (req, res) => {
 
     if (req.file) {
         req.body.thumbnail = `/uploads/${req.file.filename}`;
-        // req.body.thumbnail = req.file.path.replace(/\\/g, "/").replace("public", "");
     }
+
     try {
-        await Product.findByIdAndUpdate(
-            { _id: req.params.id },
-            req.body
-        ) 
-        req.flash('success', 'Update product successfully!')
+        const existingProduct = await Product.findById(req.params.id);
+
+        if (!existingProduct) {
+            req.flash('error', 'Product not found.');
+            return res.redirect(`${systemConfig.prefixAdmin}/products`);
+        }
+
+        // Merge updatedAt vào meta cũ
+        req.body.meta = {
+            ...existingProduct.meta?.toObject?.() || {},
+            updatedAt: new Date(),
+        };
+
+        await Product.findByIdAndUpdate(req.params.id, req.body);
+        req.flash('success', 'Update product successfully!');
     } catch (error) {
+        console.error(error);
         req.flash('error', 'An error occurred while updating the product.');
     }
 
     res.redirect(`${systemConfig.prefixAdmin}/products`);
-}   
+}
 
 // [GET] admin/products/detail/:id
 module.exports.detail = async (req, res) => {
@@ -231,7 +242,9 @@ module.exports.detail = async (req, res) => {
         const find = {
             _id: id,
             deleted: false,
+            status: "active" 
         };
+        
         const product = await Product.findOne(find);
 
         if (!product) {
