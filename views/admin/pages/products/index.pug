@@ -4,12 +4,15 @@ include ../../mixins/search.pug
 include ../../mixins/pagination.pug
 include ../../mixins/form-change-multi.pug
 include ../../mixins/alert.pug
+include ../../mixins/sort.pug
 
 block main 
     +alert-success(5000)
 
     h1 Product List
     +search(keyword)
+    +sortProducts()
+
     h5.mb-2 Bộ lọc trạng thái:
     div.d-flex.align-items-center.gap-3
         +filter-status(filterStatus)

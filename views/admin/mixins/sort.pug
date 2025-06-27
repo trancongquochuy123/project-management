@@ -1,0 +1,16 @@
+mixin sortProducts()
+    div(sort).form-group
+        h3 Sắp xếp theo:
+        select.form-control(name="sort" sort-select)
+            option(value="createdAt_desc") Mới nhất
+            option(value="createdAt_asc") Cũ nhất
+            option(value="price_asc") Giá tăng dần
+            option(value="price_desc") Giá giảm dần
+            option(value="title_asc") Tên A-Z
+            option(value="title_desc") Tên Z-A
+            option(value="position_asc") Vị trí tăng dần
+            option(value="position_desc", selected=true) Vị trí giảm dần
+        button(
+            class="btn btn-primary mt-2"
+            sort-clear
+        ) Clear

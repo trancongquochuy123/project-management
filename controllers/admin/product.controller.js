@@ -38,8 +38,20 @@ module.exports.index = async (req, res) => {
 
     // End Pagination
 
+
+    // Sort 
+    let sort = {};
+
+    if (req.query.sortKey && req.query.sortValue) {
+        const { sortKey, sortValue } = req.query;
+        sort[sortKey] = sortValue === 'asc' ? 1 : -1; 
+    } else {
+        sort.position = -1;
+    }
+    // End Sort
+
     const products = await Product.find(findProducts)
-        .sort({ position: "desc" })
+        .sort(sort)
         .limit(objectPagination.limitItem)
         .skip(objectPagination.skip);
 
@@ -228,15 +240,15 @@ module.exports.editPatch = async (req, res) => {
 
 // [GET] admin/products/detail/:id
 module.exports.detail = async (req, res) => {
-        try {
+    try {
         const id = req.params.id;
 
         const find = {
             _id: id,
             deleted: false,
-            status: "active" 
+            status: "active"
         };
-        
+
         const product = await Product.findOne(find);
 
         if (!product) {
