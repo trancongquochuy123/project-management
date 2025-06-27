@@ -7,7 +7,6 @@ const searchHelper = require("../../helper/search");
 const paginationHelper = require("../../helper/pagination");
 
 // [GET] /products
-
 module.exports.index = async (req, res) => {
     const filterStatus = filterStatusHelper(req.query);
 
@@ -159,10 +158,7 @@ module.exports.createProduct = async (req, res) => {
         req.body.position = countProducts + 1;
     }
 
-    if (req.file) {
-        req.body.thumbnail = `/uploads/${req.file.filename}`;
-        // req.body.thumbnail = req.file.path.replace(/\\/g, "/").replace("public", "");
-    }
+    console.log("req.body:", req.body);
     const product = new Product(req.body);
     await product.save();
 
@@ -205,10 +201,6 @@ module.exports.editPatch = async (req, res) => {
     req.body.discountPercentage = parseFloat(req.body.discountPercentage);
     req.body.stock = parseFloat(req.body.stock);
     req.body.position = parseInt(req.body.position);
-
-    if (req.file) {
-        req.body.thumbnail = `/uploads/${req.file.filename}`;
-    }
 
     try {
         const existingProduct = await Product.findById(req.params.id);
