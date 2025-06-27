@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const methodOverride = require('method-override');
 const bodyParser = require('body-parser');
 const flash = require('express-flash'); 
@@ -6,7 +7,6 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
-
 
 require('dotenv').config();
 
@@ -29,6 +29,9 @@ app.use(methodOverride('_method'));
 app.use(cookieParser('huydeptrai'));
 app.use(session({ cookie: { maxAge: 60000 }}));
 app.use(flash());
+
+// Tinymce
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
 
 // Body Parser
 app.use(bodyParser.urlencoded({ extended: true }));
