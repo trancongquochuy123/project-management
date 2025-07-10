@@ -1,6 +1,7 @@
 const ProductCategory = require("../../models/product-category");
 const systemConfig = require("../../config/system");
 const paginationHelper = require("../../helper/pagination");
+const createTreeHelper = require("../../helper/createTree");
 
 // [GET] /admin/products-category
 module.exports.index = async (req, res) => {
@@ -23,19 +24,30 @@ module.exports.index = async (req, res) => {
 
     const records = await ProductCategory.find(findProducts)
 
+    const newRecords = createTreeHelper.createTree(records);
+
     res.render("admin/pages/products-category/index.pug", {
         pageTitle: "Products Category",
         description: "Welcome to the products category!",
-        records: records,
+        records: newRecords,
         pagination: objectPagination,
     });
 }
 
 // [GET] /admin/products-category/create
 module.exports.create = async (req, res) => {
+    let findProducts = {
+        deleted: false,
+    };
+
+    const records = await ProductCategory.find(findProducts);
+
+    const newRecords = createTreeHelper.createTree(records);
+
     res.render("admin/pages/products-category/create.pug", {
         pageTitle: "Create Product Category",
         description: "Create a new product category",
+        records: newRecords,
     });
 }
 

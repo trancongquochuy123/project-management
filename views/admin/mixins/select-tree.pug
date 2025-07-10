@@ -1,0 +1,7 @@
+mixin select-tree(records, level = 1)
+    each record in records
+        - const prefix = Array(level+1).join('-- '); // Tạo khoảng trắng cho thụt lề
+        option(value=record._id) #{prefix} #{record.title}
+        if record.children && record.children.length > 0
+            //- Đệ quy để hiển thị các mục con
+            +select-tree(record.children, level + 1) 

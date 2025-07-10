@@ -35,7 +35,6 @@ module.exports.index = async (req, res) => {
         req.query,
         countProducts
     );
-
     // End Pagination
 
 

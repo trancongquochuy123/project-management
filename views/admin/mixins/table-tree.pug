@@ -1,0 +1,62 @@
+mixin table-tree(records, level = 1)
+    each product, index in records
+        - const prefix = Array(level + 1).join('-- '); // Create indentation for tree structure
+        tr  
+            td 
+                input(
+                    type="checkbox"
+                    name="id"
+                    value=product._id
+                )
+            - const currentPage = Number(pagination.currentPage);
+            - const limitItem = Number(pagination.limitItem);
+            td #{index + 1 + (currentPage - 1) * limitItem}
+            td
+                img(src=product.thumbnail, alt=product.title, class="product-image")
+            td #{prefix} #{product.title}
+            td
+                input(
+                class="form-control"
+                style="width: 150px;"
+                type="number"
+                value=product.position
+                min=1
+                name="position"
+                )
+            td
+                if (product.status == 'active')
+                    a(
+                        href="javascript:;"
+                        data-status=product.status
+                        data-id=product._id
+                        button-change-status
+                        class="status available"
+                        ) Active
+                else
+                    a(
+                        href="javascript:;"
+                        data-status=product.status 
+                        data-id=product._id
+                        button-change-status
+                        class="status out-of-stock"
+                        ) Inactive
+            td
+                a(
+                    href=`${prefixAdmin}/products-category/edit/${product._id}`
+                    class="btn btn-edit"
+                ) Edit
+
+                    a(
+                        href=`${prefixAdmin}/products-category/detail/${product._id}`
+                        class="btn btn-secondary"
+                ) Detail
+
+                button(
+                    class="btn btn-delete"
+                    data-id=product._id
+                    button-delete
+                ) Delete
+
+        if product.children && product.children.length > 0
+            //- Recursive call to display child products    
+            +table-tree(product.children, level + 1)

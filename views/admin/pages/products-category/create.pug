@@ -1,5 +1,6 @@
 extends ../../layout/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
 
 block main
     h1 Create Product
@@ -19,11 +20,11 @@ block main
             .col-6
                 .form-group
                     label(for="parent_id") Parent Category
-                    input.form-control(type="text" name="parent_id" id="parent_id" placeholder="Parent Category ID")
-                    //- select.form-control(name="parentId" id="parentId")
-                    //-     option(value="") Select Parent Category
-                    //-     each category in categories
-                    //-         option(value=category._id) #{category.title}
+                    //- input.form-control(type="text" name="parent_id" id="parent_id" placeholder="Parent Category ID")
+                    select.form-control(name="parent_id" id="parent_id")
+                        option(value="") Select Parent Category
+                        if (records)
+                            +select-tree(records)
 
             .col-6
                 .form-group
