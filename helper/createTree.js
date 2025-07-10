@@ -32,16 +32,37 @@ Giữ nguyên children nếu có, bỏ qua nếu không có để cây gọn.
  * Giữ nguyên children nếu có, bỏ qua nếu không có để cây gọn.
  * Sử dụng toObject() để đảm bảo là plain object.
  **/
+
+let count = 0;
+
 module.exports.createTree = function createTree(arr, parentId = null) {
-    return arr
-        .filter(item => {
-            return (item.parent_id?.toString() || null) === (parentId?.toString() || null);
-        })
-        .map(item => {
-            const children = createTree(arr, item._id);
-            return {
-                ...item.toObject?.() || item,
-                ...(children.length > 0 && { children })
-            };
+    count = 0; // reset count khi gọi mới
+
+    function buildTree(arr, parentId = null) {
+        const tree = [];
+
+        arr.forEach(item => {
+            if ((item.parent_id?.toString() || null) === (parentId?.toString() || null)) {
+                count++;
+                const newItem = item.toObject?.() || { ...item };
+                newItem.index = count;
+
+                console.log(`Added item with id: ${item._id}, index: ${count}`);
+
+                const children = buildTree(arr, item._id);
+                if (children.length > 0) {
+                    newItem.children = children;
+                }
+
+                tree.push(newItem);
+            }
         });
-}
+
+        return tree;
+    }
+
+    const result = buildTree(arr, parentId);
+    console.log('Final tree:', JSON.stringify(result, null, 2));
+    return result;
+};
+

@@ -8,9 +8,7 @@ mixin table-tree(records, level = 1)
                     name="id"
                     value=product._id
                 )
-            - const currentPage = Number(pagination.currentPage);
-            - const limitItem = Number(pagination.limitItem);
-            td #{index + 1 + (currentPage - 1) * limitItem}
+            td #{product.index}
             td
                 img(src=product.thumbnail, alt=product.title, class="product-image")
             td #{prefix} #{product.title}
