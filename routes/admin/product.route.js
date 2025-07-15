@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 // const storageMulter = require('../../helper/storageMulter.js');
-const uploadCloud = require('../../middlewares/admin/uploadCloud.middleware.js');
+const { uploadCloudinary } = require('../../middlewares/admin/uploadCloud.middleware.js');
 
 const upload = multer();
 
@@ -23,7 +23,7 @@ router.get("/create", controller.create);
 // Multer
 router.post('/create',
     upload.single('thumbnail'),
-    uploadCloud.upload, // middleware upload ảnh lên Cloudinary
+    uploadCloudinary('products/thumbnails'), 
     validate.createProduct,
     controller.createProduct
 );
@@ -32,7 +32,7 @@ router.get("/edit/:id", controller.edit);
 
 router.patch("/edit/:id",
     upload.single('thumbnail'),
-    uploadCloud.upload, // middleware upload ảnh lên Cloudinary
+    uploadCloudinary('products/thumbnails'),
     validate.createProduct,
     controller.editPatch
 );

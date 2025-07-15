@@ -5,6 +5,7 @@ const systemConfig = require("../../config/system");
 const filterStatusHelper = require("../../helper/filterStatus");
 const searchHelper = require("../../helper/search");
 const paginationHelper = require("../../helper/pagination");
+const { processDescription } = require("../../helper/handleDescriptionImage");
 
 // [GET] /products
 module.exports.index = async (req, res) => {
@@ -43,7 +44,7 @@ module.exports.index = async (req, res) => {
 
     if (req.query.sortKey && req.query.sortValue) {
         const { sortKey, sortValue } = req.query;
-        sort[sortKey] = sortValue === 'asc' ? 1 : -1; 
+        sort[sortKey] = sortValue === 'asc' ? 1 : -1;
     } else {
         sort.position = -1;
     }
@@ -167,7 +168,8 @@ module.exports.createProduct = async (req, res) => {
         req.body.position = countProducts + 1;
     }
 
-    console.log("req.body:", req.body);
+    req.body.description = await processDescription(req.body.description);
+
     const product = new Product(req.body);
     await product.save();
 
@@ -185,6 +187,7 @@ module.exports.edit = async (req, res) => {
             _id: id,
             deleted: false,
         };
+
         const product = await Product.findOne(find);
 
         if (!product) {
@@ -206,34 +209,44 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH] admin/products/edit/:id
 module.exports.editPatch = async (req, res) => {
-    req.body.price = parseFloat(req.body.price);
-    req.body.discountPercentage = parseFloat(req.body.discountPercentage);
-    req.body.stock = parseFloat(req.body.stock);
-    req.body.position = parseInt(req.body.position);
+  req.body.price = parseFloat(req.body.price);
+  req.body.discountPercentage = parseFloat(req.body.discountPercentage);
+  req.body.stock = parseFloat(req.body.stock);
+  req.body.position = parseInt(req.body.position);
 
-    try {
-        const existingProduct = await Product.findById(req.params.id);
+  try {
+    const existingProduct = await Product.findById(req.params.id);
 
-        if (!existingProduct) {
-            req.flash('error', 'Product not found.');
-            return res.redirect(`${systemConfig.prefixAdmin}/products`);
-        }
-
-        // Merge updatedAt vào meta cũ
-        req.body.meta = {
-            ...existingProduct.meta?.toObject?.() || {},
-            updatedAt: new Date(),
-        };
-
-        await Product.findByIdAndUpdate(req.params.id, req.body);
-        req.flash('success', 'Update product successfully!');
-    } catch (error) {
-        console.error(error);
-        req.flash('error', 'An error occurred while updating the product.');
+    if (!existingProduct) {
+      req.flash('error', 'Product not found.');
+      return res.redirect(`${systemConfig.prefixAdmin}/products`);
     }
 
-    res.redirect(`${systemConfig.prefixAdmin}/products`);
-}
+    // 🔁 Xử lý ảnh dạng data:image/... trong description (nếu có)
+    try {
+      req.body.description = await processDescription(req.body.description);
+    } catch (err) {
+      console.error('[CLOUDINARY UPLOAD ERROR]', err);
+      req.flash('error', 'Lỗi upload ảnh trong mô tả.');
+      return res.redirect(`${systemConfig.prefixAdmin}/products`);
+    }
+
+    // Merge updatedAt vào meta cũ
+    req.body.meta = {
+      ...existingProduct.meta?.toObject?.() || {},
+      updatedAt: new Date(),
+    };
+
+    await Product.findByIdAndUpdate(req.params.id, req.body);
+    req.flash('success', 'Update product successfully!');
+  } catch (error) {
+    console.error(error);
+    req.flash('error', 'An error occurred while updating the product.');
+  }
+
+  res.redirect(`${systemConfig.prefixAdmin}/products`);
+};
+
 
 // [GET] admin/products/detail/:id
 module.exports.detail = async (req, res) => {
