@@ -26,11 +26,9 @@ if (formSearch) {
     let url = new URL(window.location.href);
 
     formSearch.addEventListener('submit', (e) => {
-        console.log("e", e);
         e.preventDefault()
 
         const keyword = e.target.elements.keyword.value
-        console.log("keyword", keyword);
 
         if (keyword) {
             url.searchParams.set('keyword', keyword);
@@ -115,7 +113,6 @@ if (formChangeMulti) {
         )
 
         const typeChange = formChangeMulti.querySelector('select[name="type"]').value
-        console.log("typeChange", typeChange);
 
         if (typeChange === "delete-all") {
             const isConfirm = confirm("Bạn có chắc chắn muốn xóa sản phẩm này không?")

@@ -36,7 +36,7 @@ Giữ nguyên children nếu có, bỏ qua nếu không có để cây gọn.
 let count = 0;
 
 module.exports.createTree = function createTree(arr, parentId = null) {
-    count = 0; // reset count khi gọi mới
+    count = 0; 
 
     function buildTree(arr, parentId = null) {
         const tree = [];
@@ -46,8 +46,6 @@ module.exports.createTree = function createTree(arr, parentId = null) {
                 count++;
                 const newItem = item.toObject?.() || { ...item };
                 newItem.index = count;
-
-                console.log(`Added item with id: ${item._id}, index: ${count}`);
 
                 const children = buildTree(arr, item._id);
                 if (children.length > 0) {
@@ -62,7 +60,6 @@ module.exports.createTree = function createTree(arr, parentId = null) {
     }
 
     const result = buildTree(arr, parentId);
-    console.log('Final tree:', JSON.stringify(result, null, 2));
     return result;
 };
 
