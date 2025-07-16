@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
+const favicon = require('serve-favicon');
 
 require('dotenv').config();
 
@@ -20,6 +21,10 @@ const routeAdmin = require('./routes/admin/index.route.js');
 database.connect();
 
 const app = express();
+
+// Favicon
+app.use(favicon(path.join(__dirname, 'public','images', 'favicon.ico')));
+
 const port = process.env.PORT ;
 
 // methodOverride
