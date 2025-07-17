@@ -190,3 +190,33 @@ module.exports.editPatch = async (req, res) => {
         res.redirect(`${systemConfig.prefixAdmin}/products-category`);
     }
 };
+
+// [GET] /admin/products-category/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const find = { _id: id, deleted: false };
+
+    const data = await ProductCategory.findOne(find);
+    if (!data) {
+      req.flash('error', 'Product category not found!');
+      return res.redirect(`${systemConfig.prefixAdmin}/products-category`);
+    }
+
+    // thêm đoạn load tất cả category để tìm parent
+    const allCats = await ProductCategory.find({ deleted: false });
+    // nếu muốn hiển thị theo cây thì:
+    const records = createTreeHelper.createTree(allCats);
+
+    res.render("admin/pages/products-category/detail.pug", {
+      pageTitle: "Product Category Details",
+      description: "View product category details",
+      record: data,
+      records,         // truyền vào đây
+    });
+  } catch (error) {
+    console.error("❌  [ERROR in detail controller]", error);
+    req.flash('error', 'An error occurred while loading product category details.');
+    res.redirect(`${systemConfig.prefixAdmin}/products-category`);
+  }
+};
