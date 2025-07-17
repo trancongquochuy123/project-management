@@ -1,0 +1,64 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
+
+block main
+    h1 Edit Product
+    +alert-error(5000)
+
+    form(
+        action=`${prefixAdmin}/products-category/edit/${record._id}?_method=PATCH`
+        method="POST"
+        enctype="multipart/form-data"
+    )
+        .row.g-3
+            .col-6
+                .form-group
+                    label(for="title") Title
+                    input.form-control(type="text" name="title" id="title" placeholder="Product title" required value=record.title)
+
+            .col-6
+                .form-group
+                    label(for="parent_id") Parent Category
+                    select.form-control(name="parent_id" id="parent_id")
+                        option(value="") Select Parent Category
+                        if (newRecords)
+                            +select-tree(
+                                newRecords,
+                                1,
+                                record && record.parent_id ? record.parent_id : '',
+                                record && record._id && !record.isNew ? record._id : ''
+                            )
+
+            .col-6
+                .form-group
+                    label(for="description") Description
+                    textarea.form-control.textarea-tinymce(name="description" id="description" rows="3" placeholder="Product description" ) !{record.description}
+
+            .col-6
+                div(
+                    class="form-group image-preview" 
+                    upload-image
+                )
+                    label(for="thumbnail") Thumbnail
+                    input.form-control(type="file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-input)
+                    img.form-img-preview( src=record.thumbnail upload-image-preview)
+                    button.close-button(type="button" upload-image-remove class="d-none") X
+
+            .col-4
+                .form-group
+                    label(for="status") Status
+                    select.form-control(name="status" id="status")
+                        option(value="active" selected=record.status=="active") Active
+                        option(value="inactive" selected=record.status=="inactive") Inactive
+
+            .col-4
+                .form-group
+                    label(for="position") Position
+                    input.form-control(type="number" name="position" id="position" placeholder="Auto Increase" value=record.position)
+
+            .col-12.text-end.mt-4
+                button.btn.btn-primary(type='submit') Edit Product
+
+    script(src="/admin/js/product.js")
+    script(src="/admin/js/script.js")

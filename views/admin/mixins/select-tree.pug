@@ -1,7 +1,31 @@
-mixin select-tree(records, level = 1)
+//- Mixin select-tree: Hiển thị danh sách category dạng cây trong thẻ <select>
+//- Tham số:
+//-   records: mảng danh mục (có thể lồng nhau theo cấu trúc cây)
+//-   level: cấp độ hiện tại trong cây (mặc định là 1, để tạo khoảng trắng phía trước)
+//-   parent_id: ID của danh mục cha đang được chọn (để hiển thị selected)
+//-   current_id: ID của danh mục hiện tại (để disable chính nó khi chỉnh sửa)
+
+mixin select-tree(records, level = 1, parent_id = '', current_id = '')
     each record in records
-        - const prefix = Array(level+1).join('-- '); // Tạo khoảng trắng cho thụt lề
-        option(value=record._id) #{prefix} #{record.title}
+        //- Tạo prefix thể hiện cấp bậc
+        - const prefix = Array(level + 1).join('-- ');
+
+        //- Chuyển các ID về string để so sánh an toàn
+        - const currentIdStr = (current_id || '').toString();
+        - const parentIdStr = (parent_id || '').toString();
+        - const recordIdStr = record._id.toString();
+
+        //- Kiểm tra trạng thái selected và disabled
+        - const isSelected = parentIdStr !== '' && recordIdStr === parentIdStr;
+        - const isDisabled = currentIdStr !== '' && recordIdStr === currentIdStr;
+
+        //- Tạo option
+        option(
+            value=record._id
+            selected=isSelected
+            disabled=isDisabled
+        ) #{prefix} #{record.title}
+        
+        //- Đệ quy cho các danh mục con
         if record.children && record.children.length > 0
-            //- Đệ quy để hiển thị các mục con
-            +select-tree(record.children, level + 1) 
+            +select-tree(record.children, level + 1, parent_id, current_id)

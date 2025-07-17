@@ -13,9 +13,18 @@ router.get("/create", controller.create);
 // Multer
 router.post('/create',
     upload.single('thumbnail'),
-    uploadCloudinary('products-category/thumbnails'), // middleware upload ảnh lên Cloudinary
+    uploadCloudinary('products-category/thumbnails'),
     validate.createProduct,
     controller.createProduct,
+);
+
+router.get("/edit/:id", controller.edit);
+
+router.patch("/edit/:id",
+    upload.single('thumbnail'),
+    uploadCloudinary('products-category/thumbnails'),
+    validate.createProduct,
+    controller.editPatch
 );
 
 
