@@ -220,3 +220,23 @@ module.exports.detail = async (req, res) => {
     res.redirect(`${systemConfig.prefixAdmin}/products-category`);
   }
 };
+
+// [DELETE] admin/products-category/delete/:id
+module.exports.deleteItem = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        await ProductCategory.findByIdAndUpdate(id, {
+            deleted: true,
+            deletedAt: new Date()
+        });
+
+        req.flash('success', 'Delete product category successfully!');
+
+        res.redirect(req.get('referer') || `${systemConfig.prefixAdmin}/products-category`);
+    } catch (error) {
+        console.error("Error in delete item:", error);
+        req.flash('error', 'An error occurred while deleting the product category.');
+        res.redirect(req.get('referer') || `${systemConfig.prefixAdmin}/products-category`);
+    }
+}

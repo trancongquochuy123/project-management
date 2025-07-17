@@ -29,3 +29,20 @@ block main
                 th Actions
         tbody
             +table-tree(records)
+
+    form(
+        id="form-change-status"
+        action=""
+        method="POST"
+        data-path=`${prefixAdmin}/products-category/change-status`
+    )
+
+    form(
+        id="form-delete-item"
+        action=""
+        method="POST"
+        data-path=`${prefixAdmin}/products-category/delete`
+    )
+
+
+    script(src="/admin/js/product.js")

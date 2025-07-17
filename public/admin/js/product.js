@@ -20,6 +20,7 @@ if (buttonChangeStatus.length > 0) {
 }
 
 // End Change Status
+
 // Delete Product
 const buttonDelete = document.querySelectorAll("[button-delete]")
 if (buttonDelete.length > 0) {
