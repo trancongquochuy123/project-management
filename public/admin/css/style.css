@@ -415,3 +415,16 @@ form#create-product-form .text-end {
 }
 
 /* End Create Form */
+
+
+.custom-outline-dark {
+    background-color: #fffbe6; /* nền kem nhẹ */
+    border: 1px solid #000 !important; /* viền đen */
+    color: #000 !important; /* chữ đen */
+    transition: 0.2s ease-in-out;
+}
+
+.custom-outline-dark:hover {
+    background-color: #f1eac2; /* sáng hơn khi hover */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
