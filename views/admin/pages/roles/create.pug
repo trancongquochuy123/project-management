@@ -1,0 +1,29 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
+
+block main
+    h1 Create Product
+    +alert-success(5000)
+    +alert-error(5000)
+
+    form(
+        action=`${prefixAdmin}/roles/create`
+        method="POST"
+        enctype="multipart/form-data"
+    )
+        .row.g-3
+            .col-6
+                .form-group
+                    label(for="title") Title
+                    input.form-control(type="text" name="title" id="title" placeholder="Role title" required)
+
+            .col-6
+                .form-group
+                    label(for="description") Description
+                    textarea.form-control(name="description" id="description" rows="3" placeholder="Role description")
+
+
+            .col-12.text-end.mt-4
+                button.btn.btn-primary(type='submit') Create Role
+

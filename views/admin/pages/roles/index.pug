@@ -1,0 +1,54 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+
+block main 
+    h1 Role
+    +alert-success(5000)
+    +alert-error(5000)
+
+    h5.mb-2 Bộ lọc trạng thái:
+    .row 
+        .col-6.text-end
+            a(
+                href=`${prefixAdmin}/roles/create`
+                class="btn btn-primary"
+            ) Create roles
+
+    table.product-table(checkbox-multi)
+        thead
+            th
+                input(type="checkbox" name="check-all")
+            th STT
+            th Nhóm quyền
+            th Mô tả ngắn
+            th Hành động
+        tbody
+            if (records.length > 0) 
+                each role, index in records
+                    tr
+                        td
+                            input(type="checkbox" name="id" value=role._id)
+                            - const currentPage = Number(pagination?.currentPage) || 1;
+                            - const limitItem = Number(pagination?.limitItem) || records.length;
+                        td #{index + 1 + (currentPage - 1) * limitItem}
+                        td #{role.title}
+                        td #{role.description}
+                        td
+                            a(
+                                href=`${prefixAdmin}/roles/edit/${role._id}`
+                                class="btn btn-edit"
+                            ) Edit
+
+                            a(
+                                href=`${prefixAdmin}/roles/detail/${role._id}`
+                                class="btn btn-secondary"
+                            ) Detail
+
+                            button(
+                                class="btn btn-delete"
+                                data-id=role._id
+                                button-delete
+                            ) Delete
+            else 
+                tr 
+                    td(colspan="4" class="text-center") Chưa có nhóm quyền được tạo
