@@ -1,8 +1,12 @@
 extends ../../layout/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
 
 block main
-    h1 Edit Product
+    .page-header.mb-4
+        h1.text-primary.mb-1 Edit Product
+        small.text-muted #{product.title || 'Product Detail'}
+
     +alert-success(5000)
     +alert-error(5000)
 
@@ -12,103 +16,125 @@ block main
         id="form-edit-product"
         enctype="multipart/form-data"
     )
-        .row.g-3
-            .col-6
+        .row.g-4
+
+            // Title
+            .col-md-6
                 .form-group
                     label(for="title") Title
                     input.form-control(
-                        type="text" 
-                        name="title" 
-                        id="title" 
-                        placeholder="Product title" 
+                        type="text"
+                        id="title"
+                        name="title"
                         required
+                        placeholder="Enter product title"
                         value=product.title
                     )
-            .col-6
+
+            // Category
+            .col-md-6
+                .form-group
+                    label(for="product_category_id") Product Category
+                    select.form-control(name="product_category_id" id="product_category_id")
+                        option(value="") -- Select Category --
+                        if category
+                            +select-tree(
+                                category,
+                                1,
+                                product.product_category_id || '',
+                                product._id || ''
+                            )
+
+            // Description + Thumbnail
+            .col-md-6
                 .form-group
                     label(for="description") Description
                     textarea.form-control.textarea-tinymce(
-                        name="description" 
-                        id="description" 
-                        rows="3" 
+                        name="description"
+                        id="description"
+                        rows="8"
                         placeholder="Product description"
-                        value=product.description
                     ) !{product.description}
 
-            .col-3
-                .form-group
-                    label(for="price") Price
+            .col-md-6
+                .form-group.image-preview(upload-image)
+                    label(for="thumbnail") Thumbnail
                     input.form-control(
-                        type="text" 
-                        name="price" 
-                        id="price" 
-                        value=product.price
+                        type="file"
+                        name="thumbnail"
+                        id="thumbnail"
+                        accept="image/*"
+                        upload-image-input
+                    )
+                    img.form-img-preview.mt-2.mb-2(
+                        src=product.thumbnail || '/images/no-image.png'
+                        upload-image-preview
+                    )
+                    button.close-button(type="button" upload-image-remove class="btn btn-sm btn-danger d-none") Remove
+
+            // Price, Discount, Stock
+            .col-md-4
+                .form-group
+                    label(for="price") Price (VNĐ)
+                    input.form-control(
+                        type="number"
+                        id="price"
+                        name="price"
+                        placeholder="e.g. 100000"
                         min="0"
+                        step="1000"
+                        value=product.price
                     )
 
-            .col-3
+            .col-md-4
                 .form-group
                     label(for="discountPercentage") Discount (%)
                     input.form-control(
-                        type="text" 
-                        name="discountPercentage" 
+                        type="number"
                         id="discountPercentage"
+                        name="discountPercentage"
+                        placeholder="e.g. 10"
+                        min="0"
+                        max="100"
+                        step="0.1"
                         value=product.discountPercentage
                     )
 
-            .col-3
+            .col-md-4
                 .form-group
                     label(for="stock") Stock
                     input.form-control(
-                        type="text" 
-                        name="stock" 
+                        type="number"
                         id="stock"
-                        value=product.stock
+                        name="stock"
+                        placeholder="e.g. 100"
                         min="0"
+                        value=product.stock
                     )
 
-            .col-6
-                div(
-                    class="form-group image-preview" 
-                    upload-image
-                )
-                    label(for="thumbnail") Thumbnail
-                    input.form-control(
-                        type="file" 
-                        name="thumbnail" 
-                        id="thumbnail" 
-                        accept="image/*" 
-                        upload-image-input
-                    )
-                    img.form-img-preview(
-                        src=product.thumbnail || "/images/no-image.png"
-                        upload-image-preview
-                    )
-
-                    button.close-button(type="button" upload-image-remove class="d-none") X
-
-            //- Selected=product.status === 'active' sẽ gán thuộc tính selected nếu điều kiện đúng.
-            .col-4
+            // Status & Position
+            .col-md-6
                 .form-group
                     label(for="status") Status
                     select.form-control(name="status" id="status")
                         option(value="active", selected=product.status === 'active') Active
                         option(value="inactive", selected=product.status === 'inactive') Inactive
 
-            .col-4
+            .col-md-6
                 .form-group
                     label(for="position") Position
                     input.form-control(
-                        type="number" 
-                        name="position" 
-                        id="position" 
-                        placeholder="Auto Increase"
+                        type="number"
+                        name="position"
+                        id="position"
+                        placeholder="Auto increase"
                         value=product.position
                     )
 
-            .col-12.text-end.mt-4
-                button.btn.btn-primary(type='submit') Update Product
+        .text-end.mt-4
+            button.btn.btn-primary(type="submit")
+                i.fas.fa-save.me-1
+                | Update Product
 
-
-    script(src="/admin/js/product.js")
-    script(src="/admin/js/script.js")
+    script(src="/admin/js/product.js", defer)
+    script(src="/admin/js/script.js", defer)

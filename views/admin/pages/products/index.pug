@@ -71,7 +71,14 @@ block main
                         min=1
                         name="position"
                         )
-                    td #{product.category}
+                    td 
+                        if product.product_category_id && product.product_category_id.title
+                            = product.product_category_id.title
+                        else if product.category
+                            = product.category
+                        else
+                            | N/A
+
                     td
                         if (product.status == 'active')
                             a(
@@ -95,9 +102,9 @@ block main
                             class="btn btn-edit"
                         ) Edit
 
-                         a(
-                            href=`${prefixAdmin}/products/detail/${product._id}`
-                            class="btn btn-secondary"
+                            a(
+                                href=`${prefixAdmin}/products/detail/${product._id}`
+                                class="btn btn-secondary"
                         ) Detail
 
                         button(

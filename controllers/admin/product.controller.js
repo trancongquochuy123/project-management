@@ -1,4 +1,5 @@
 const Product = require("../../models/product.model");
+const ProductCategory = require("../../models/product-category");
 
 const systemConfig = require("../../config/system");
 
@@ -6,6 +7,7 @@ const filterStatusHelper = require("../../helper/filterStatus");
 const searchHelper = require("../../helper/search");
 const paginationHelper = require("../../helper/pagination");
 const { processDescription } = require("../../helper/handleDescriptionImage");
+const createTreeHelper = require("../../helper/createTree");
 
 // [GET] /products
 module.exports.index = async (req, res) => {
@@ -51,6 +53,7 @@ module.exports.index = async (req, res) => {
         // End Sort
 
         const products = await Product.find(findProducts)
+            .populate('product_category_id', 'title')
             .sort(sort)
             .limit(objectPagination.limitItem)
             .skip(objectPagination.skip);
@@ -183,8 +186,17 @@ module.exports.deleteItem = async (req, res) => {
 // [GET] admin/products/create
 module.exports.create = async (req, res) => {
     try {
+        let findProducts = {
+            deleted: false,
+        };
+
+        const records = await ProductCategory.find(findProducts);
+
+        const newCategory = createTreeHelper.createTree(records);
+
         res.render("admin/pages/products/create.pug", {
             pageTitle: "Create Product",
+            category: newCategory,
         });
     } catch (error) {
         console.error("Error in create page:", error);
@@ -239,9 +251,18 @@ module.exports.edit = async (req, res) => {
             return res.redirect(`${systemConfig.prefixAdmin}/products`);
         }
 
+
+        const records = await ProductCategory.find({
+            deleted: false,
+        });
+
+        const newCategory = createTreeHelper.createTree(records);
+
+
         res.render("admin/pages/products/edit.pug", {
             pageTitle: "Edit Product",
             product: product,
+            category: newCategory,
         });
     }
     catch (error) {

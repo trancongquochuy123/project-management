@@ -1,5 +1,6 @@
 extends ../../layout/default.pug
 include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
 
 block main
     h1 Create Product
@@ -16,7 +17,13 @@ block main
                 .form-group
                     label(for="title") Title
                     input.form-control(type="text" name="title" id="title" placeholder="Product title" required)
-
+            .col-6
+                .form-group
+                    label(for="product_category_id") Parent Category
+                    select.form-control(name="product_category_id" id="product_category_id")
+                        option(value="") Select Parent Category
+                        if (category)
+                            +select-tree(category)
             .col-6
                 .form-group
                     label(for="description") Description
@@ -61,7 +68,7 @@ block main
 
             .col-12.text-end.mt-4
                 button.btn.btn-primary(type='submit') Create Product
-    
+
 block scripts
     script(src="/admin/js/product.js")
     script(src="/admin/js/script.js")
