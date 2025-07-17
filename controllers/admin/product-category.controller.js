@@ -1,4 +1,4 @@
-const ProductCategory = require("../../models/product-category");
+const ProductCategory = require("../../models/product-category.model");
 const systemConfig = require("../../config/system");
 const paginationHelper = require("../../helper/pagination");
 const createTreeHelper = require("../../helper/createTree");
