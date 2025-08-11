@@ -69,12 +69,12 @@ block main
                                 ) Inactive
                     td
                         a(
-                            href=`${prefixAdmin}/records/edit/${record._id}`
+                            href=`${prefixAdmin}/accounts/edit/${record._id}`
                             class="btn btn-edit"
                         ) Edit
 
                             a(
-                                href=`${prefixAdmin}/records/detail/${record._id}`
+                                href=`${prefixAdmin}/accounts/detail/${record._id}`
                                 class="btn btn-secondary"
                         ) Detail
 
@@ -87,3 +87,5 @@ block main
 
     if !records || records.length === 0
         .alert.alert-warning.mt-3.text-center Không có tài khoản nào được tìm thấy.     
+
+

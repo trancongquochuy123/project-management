@@ -1,0 +1,101 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+include ../../mixins/select-tree.pug
+
+block main
+    h1.mb-4.text-primary Edit Account
+    +alert-success(5000)
+    +alert-error(5000)
+
+    .card.shadow-lg.border-0.rounded-3
+        .card-body.p-4
+            form(
+                action=`${prefixAdmin}/accounts/edit/${account._id}?_method=PATCH`
+                method="POST"
+                enctype="multipart/form-data"
+            )
+                .row.g-4
+                    .col-md-6
+                        .form-group
+                            label.fw-semibold(for="fullName") Full Name
+                            input.form-control.form-control-lg(
+                                type="text" 
+                                name="fullName" 
+                                id="fullName" 
+                                value=account.fullName
+                                required
+                            )
+
+                    .col-md-6
+                        .form-group
+                            label.fw-semibold(for="email") Email
+                            input.form-control.form-control-lg(
+                                type="email" 
+                                name="email" 
+                                id="email" 
+                                value=account.email
+                                required
+                            )
+
+                    .col-md-6
+                        .form-group
+                            label.fw-semibold(for="password") Password (Leave blank to keep current)
+                            input.form-control.form-control-lg(
+                                type="password" 
+                                name="password" 
+                                id="password" 
+                                placeholder="Enter new password if you want to change"
+                            )
+
+                    .col-md-6
+                        .form-group
+                            label.fw-semibold(for="phone") Phone
+                            input.form-control.form-control-lg(
+                                type="text" 
+                                name="phone" 
+                                id="phone" 
+                                value=account.phone
+                            )
+
+                    .col-md-6
+                        .form-group
+                            label.fw-semibold(for="roleId") Role
+                            select.form-select.form-select-lg(name="roleId" id="roleId" required)
+                                option(value="") Select Role
+                                if roles
+                                    each role in roles
+                                        option(
+                                            value=role._id
+                                            selected=(account.roleId && account.roleId.toString() === role._id.toString())
+                                        ) #{role.title}
+                                else
+                                    option(value="") No roles available
+
+                    .col-md-6
+                        .form-group
+                            label.fw-semibold(for="status") Status
+                            select.form-select.form-select-lg(name="status" id="status" required)
+                                option(value="active" selected=(account.status === 'active')) Active
+                                option(value="inactive" selected=(account.status === 'inactive')) Inactive
+
+                    .col-12
+                        .form-group
+                            label.fw-semibold(for="avatar") Avatar
+                            if account.avatar
+                                div.mb-2
+                                    img(
+                                        src=account.avatar
+                                        alt="Current Avatar"
+                                        style="width:80px; height:80px; object-fit:cover; border-radius:50%;"
+                                    )
+                            input.form-control.form-control-lg(
+                                type="file" 
+                                name="avatar" 
+                                id="avatar" 
+                                accept="image/*"
+                            )
+
+                    .col-12.text-end.mt-4
+                        button.btn.btn-primary.btn-lg.px-4(type='submit')
+                            i.fas.fa-save.me-2
+                            | Update Account

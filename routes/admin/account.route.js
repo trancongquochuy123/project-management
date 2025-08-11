@@ -19,4 +19,13 @@ router.post('/create',
     controller.createAccount
 );
 
+router.get("/edit/:id", controller.edit);
+
+router.patch('/edit/:id',
+    upload.single('avatar'),
+    uploadCloudinary('accounts/avatars'),
+    // validate.editAccount,
+    controller.editAccount
+);
+
 module.exports = router;
