@@ -1,8 +1,9 @@
 {
     "github.copilot.chat.commitMessageGeneration.instructions": [
+        "Sử dụng tiếng Việt",
         "Ngắn gọn và rõ ràng (tối đa 72 ký tự dòng đầu).",
         "Dùng động từ ở hiện tại (vd: add, fix, update).",
         "Bắt đầu bằng type chuẩn: feat, fix, docs, style, refactor, test, chore.",
-        "Không viết hoa đầu dòng, không chấm cuối dòng."
+        "Không viết hoa đầu dòng, không chấm cuối dòng.",
     ],
 }

@@ -1,22 +1,16 @@
 const mongoose = require('mongoose');
-const slug = require('mongoose-slug-updater');
 const generate = require('../helper/generate');
 
-
-// 1. Register plugin before creating schema
-mongoose.plugin(slug);
-
-// Define product schema
+// Define account schema
 const accountSchema = new mongoose.Schema(
     {
         fullName: { type: String, required: true },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
-        role: { type: String, enum: ['user', 'admin'], default: 'user' },
         token: { type: String, default: generate.generateRandomString(32)},
         phone: { type: String },
         avatar: { type: String },
-        roleId: { type: String },
+        roleId: { type: mongoose.Schema.Types.ObjectId },
         createdAt: { type: Date, default: Date.now },
         updatedAt: { type: Date, default: Date.now },
         deleted: { type: Boolean, default: false },
@@ -28,6 +22,6 @@ const accountSchema = new mongoose.Schema(
     }
 );
 
-// Export Product model
-const Product = mongoose.model('Product', accountSchema, 'products');
-module.exports = Product;
+// Export Account model
+const Account = mongoose.model('Account', accountSchema, 'accounts');
+module.exports = Account;
