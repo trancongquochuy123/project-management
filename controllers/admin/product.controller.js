@@ -80,6 +80,22 @@ module.exports.index = async (req, res) => {
         //     return plainItem;
         // });
 
+        for (const product of products) {
+            // Lấy ra thông tin người tạo 
+            const user = await Account.findById(product.createdBy.accountId).select("fullName").lean();
+            if (!user) continue;
+            product.accountFullName = user.fullName;
+
+            // Lấy ra thông tin người update mới nhất
+            const lastUpdated = product.updatedBy[product.updatedBy.length - 1];
+            if (lastUpdated) {
+                const userUpdate = await Account.findById(lastUpdated.accountId).select("fullName").lean();
+                if (userUpdate) {
+                    product.accountUpdateFullName = userUpdate.fullName;
+                }
+            }
+        }
+
         res.render("admin/pages/products/index.pug", {
             pageTitle: "Products",
             description: "Welcome to the admin products!",
@@ -101,7 +117,15 @@ module.exports.changeStatus = async (req, res) => {
         const status = req.params.status;
         const id = req.params.id;
 
-        await Product.findByIdAndUpdate(id, { status: status });
+        await Product.findByIdAndUpdate(id, {
+            status: status,
+            $push: {
+                updatedBy: {
+                    accountId: res.locals.user._id,
+                    updatedAt: new Date()
+                }
+            }
+        });
 
         req.flash('success', 'Change status product successfully!');
 
@@ -127,36 +151,58 @@ module.exports.changeMulti = async (req, res) => {
 
         switch (type) {
             case "active":
-                await Product.updateMany({ _id: { $in: ids } }, { status: "active" });
-                req.flash('success', `Change status of ${ids.length} product successfully!`);
-                break;
             case "inactive":
-                await Product.updateMany({ _id: { $in: ids } }, { status: "inactive" });
+                await Product.updateMany(
+                    { _id: { $in: ids } },
+                    {
+                        status: type,
+                        $push: {
+                            updatedBy: {
+                                accountId: res.locals.user._id,
+                                updatedAt: new Date()
+                            }
+                        }
+                    }
+                );
                 req.flash('success', `Change status of ${ids.length} product successfully!`);
                 break;
+
             case "delete-all":
-                await Product.updateMany({ _id: { $in: ids } }, {
-                    deleted: true,
-                    deletedBy: {
-                        accountId: res.locals.user._id,
-                        deletedAt: new Date(),
+                await Product.updateMany(
+                    { _id: { $in: ids } },
+                    {
+                        deleted: true,
+                        deletedBy: {
+                            accountId: res.locals.user._id,
+                            deletedAt: new Date()
+                        }
                     }
-                });
+                );
                 req.flash('success', `Delete ${ids.length} product successfully!`);
                 break;
+
             case "change-position":
-                // Sử dụng Promise.all thay vì forEach để đảm bảo tất cả operations hoàn thành
                 await Promise.all(ids.map(async (item) => {
                     let [id, position] = item.split("-");
                     position = parseInt(position);
-                    await Product.findByIdAndUpdate(id, { position: position });
+                    await Product.findByIdAndUpdate(id, {
+                        position: position,
+                        $push: {
+                            updatedBy: {
+                                accountId: res.locals.user._id,
+                                updatedAt: new Date()
+                            }
+                        }
+                    });
                 }));
                 req.flash('success', `Change position of ${ids.length} product successfully!`);
                 break;
+
             default:
                 req.flash('error', 'Invalid action type.');
                 break;
         }
+
 
         res.redirect(req.get('referer') || `${systemConfig.prefixAdmin}/products`);
     } catch (error) {
@@ -207,7 +253,6 @@ module.exports.create = async (req, res) => {
                 record.accountFullname = account.fullName;
             }
         }
-
 
         res.render("admin/pages/products/create.pug", {
             pageTitle: "Create Product",
@@ -307,7 +352,7 @@ module.exports.editPatch = async (req, res) => {
             return res.redirect(`${systemConfig.prefixAdmin}/products`);
         }
 
-        // 🔁 Xử lý ảnh dạng data:image/... trong description (nếu có)
+        // Xử lý ảnh trong description
         try {
             req.body.description = await processDescription(req.body.description);
         } catch (err) {
@@ -316,15 +361,21 @@ module.exports.editPatch = async (req, res) => {
             return res.redirect(`${systemConfig.prefixAdmin}/products`);
         }
 
-        // Merge updatedAt vào meta cũ
-        req.body.meta = {
-            ...existingProduct.meta?.toObject?.() || {},
-            updatedAt: new Date(),
-        };
+        // Tạo bản sao dữ liệu cần update, không ghi đè updatedBy
+        const updateData = { ...req.body };
+        delete updateData.updatedBy; // chắc chắn không ghi đè updatedBy
 
-        await Product.findByIdAndUpdate(req.params.id, req.body);
+        await Product.findByIdAndUpdate(req.params.id, {
+            ...updateData,
+            $push: {
+                updatedBy: {
+                    accountId: res.locals.user._id,
+                    updatedAt: new Date()
+                }
+            }
+        });
+
         req.flash('success', 'Update product successfully!');
-
         res.redirect(`${systemConfig.prefixAdmin}/products`);
     } catch (error) {
         console.error("Error in edit patch:", error);
@@ -332,6 +383,7 @@ module.exports.editPatch = async (req, res) => {
         res.redirect(`${systemConfig.prefixAdmin}/products`);
     }
 };
+
 
 // [GET] admin/products/detail/:id
 module.exports.detail = async (req, res) => {

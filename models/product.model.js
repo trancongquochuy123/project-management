@@ -50,8 +50,13 @@ const productSchema = new mongoose.Schema(
         deletedBy: {
             accountId: { type: mongoose.Schema.Types.ObjectId },
             deletedAt: { type: Date }
-        }
-        
+        },
+        updatedBy: [
+            {
+                accountId: { type: mongoose.Schema.Types.ObjectId },
+                updatedAt: { type: Date, default: Date.now }
+            }
+        ]
         
     },
     {
