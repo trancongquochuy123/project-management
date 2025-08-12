@@ -3,138 +3,139 @@ include ../../mixins/alert.pug
 include ../../mixins/select-tree.pug
 
 block main
-    .page-header.mb-4
-        h1.text-primary.mb-1 Edit Product
-        small.text-muted #{product.title || 'Product Detail'}
+    if (role.permissions.includes('product_edit'))
+        .page-header.mb-4
+            h1.text-primary.mb-1 Edit Product
+            small.text-muted #{product.title || 'Product Detail'}
 
-    +alert-success(5000)
-    +alert-error(5000)
+        +alert-success(5000)
+        +alert-error(5000)
 
-    form(
-        action=`${prefixAdmin}/products/edit/${product._id}?_method=PATCH`
-        method="POST"
-        id="form-edit-product"
-        enctype="multipart/form-data"
-    )
-        .row.g-4
+        form(
+            action=`${prefixAdmin}/products/edit/${product._id}?_method=PATCH`
+            method="POST"
+            id="form-edit-product"
+            enctype="multipart/form-data"
+        )
+            .row.g-4
 
-            // Title
-            .col-md-6
-                .form-group
-                    label(for="title") Title
-                    input.form-control(
-                        type="text"
-                        id="title"
-                        name="title"
-                        required
-                        placeholder="Enter product title"
-                        value=product.title
-                    )
+                // Title
+                .col-md-6
+                    .form-group
+                        label(for="title") Title
+                        input.form-control(
+                            type="text"
+                            id="title"
+                            name="title"
+                            required
+                            placeholder="Enter product title"
+                            value=product.title
+                        )
 
-            // Category
-            .col-md-6
-                .form-group
-                    label(for="product_category_id") Product Category
-                    select.form-control(name="product_category_id" id="product_category_id")
-                        option(value="") -- Select Category --
-                        if category
-                            +select-tree(
-                                category,
-                                1,
-                                product.product_category_id || '',
-                                product._id || ''
-                            )
+                // Category
+                .col-md-6
+                    .form-group
+                        label(for="product_category_id") Product Category
+                        select.form-control(name="product_category_id" id="product_category_id")
+                            option(value="") -- Select Category --
+                            if category
+                                +select-tree(
+                                    category,
+                                    1,
+                                    product.product_category_id || '',
+                                    product._id || ''
+                                )
 
-            // Description + Thumbnail
-            .col-md-6
-                .form-group
-                    label(for="description") Description
-                    textarea.form-control.textarea-tinymce(
-                        name="description"
-                        id="description"
-                        rows="8"
-                        placeholder="Product description"
-                    ) !{product.description}
+                // Description + Thumbnail
+                .col-md-6
+                    .form-group
+                        label(for="description") Description
+                        textarea.form-control.textarea-tinymce(
+                            name="description"
+                            id="description"
+                            rows="8"
+                            placeholder="Product description"
+                        ) !{product.description}
 
-            .col-md-6
-                .form-group.image-preview(upload-image)
-                    label(for="thumbnail") Thumbnail
-                    input.form-control(
-                        type="file"
-                        name="thumbnail"
-                        id="thumbnail"
-                        accept="image/*"
-                        upload-image-input
-                    )
-                    img.form-img-preview.mt-2.mb-2(
-                        src=product.thumbnail || '/images/no-image.png'
-                        upload-image-preview
-                    )
-                    button.close-button(type="button" upload-image-remove class="btn btn-sm btn-danger d-none") Remove
+                .col-md-6
+                    .form-group.image-preview(upload-image)
+                        label(for="thumbnail") Thumbnail
+                        input.form-control(
+                            type="file"
+                            name="thumbnail"
+                            id="thumbnail"
+                            accept="image/*"
+                            upload-image-input
+                        )
+                        img.form-img-preview.mt-2.mb-2(
+                            src=product.thumbnail || '/images/no-image.png'
+                            upload-image-preview
+                        )
+                        button.close-button(type="button" upload-image-remove class="btn btn-sm btn-danger d-none") Remove
 
-            // Price, Discount, Stock
-            .col-md-4
-                .form-group
-                    label(for="price") Price (VNĐ)
-                    input.form-control(
-                        type="number"
-                        id="price"
-                        name="price"
-                        placeholder="e.g. 100000"
-                        min="0"
-                        step="1000"
-                        value=product.price
-                    )
+                // Price, Discount, Stock
+                .col-md-4
+                    .form-group
+                        label(for="price") Price (VNĐ)
+                        input.form-control(
+                            type="number"
+                            id="price"
+                            name="price"
+                            placeholder="e.g. 100000"
+                            min="0"
+                            step="1000"
+                            value=product.price
+                        )
 
-            .col-md-4
-                .form-group
-                    label(for="discountPercentage") Discount (%)
-                    input.form-control(
-                        type="number"
-                        id="discountPercentage"
-                        name="discountPercentage"
-                        placeholder="e.g. 10"
-                        min="0"
-                        max="100"
-                        step="0.1"
-                        value=product.discountPercentage
-                    )
+                .col-md-4
+                    .form-group
+                        label(for="discountPercentage") Discount (%)
+                        input.form-control(
+                            type="number"
+                            id="discountPercentage"
+                            name="discountPercentage"
+                            placeholder="e.g. 10"
+                            min="0"
+                            max="100"
+                            step="0.1"
+                            value=product.discountPercentage
+                        )
 
-            .col-md-4
-                .form-group
-                    label(for="stock") Stock
-                    input.form-control(
-                        type="number"
-                        id="stock"
-                        name="stock"
-                        placeholder="e.g. 100"
-                        min="0"
-                        value=product.stock
-                    )
+                .col-md-4
+                    .form-group
+                        label(for="stock") Stock
+                        input.form-control(
+                            type="number"
+                            id="stock"
+                            name="stock"
+                            placeholder="e.g. 100"
+                            min="0"
+                            value=product.stock
+                        )
 
-            // Status & Position
-            .col-md-6
-                .form-group
-                    label(for="status") Status
-                    select.form-control(name="status" id="status")
-                        option(value="active", selected=product.status === 'active') Active
-                        option(value="inactive", selected=product.status === 'inactive') Inactive
+                // Status & Position
+                .col-md-6
+                    .form-group
+                        label(for="status") Status
+                        select.form-control(name="status" id="status")
+                            option(value="active", selected=product.status === 'active') Active
+                            option(value="inactive", selected=product.status === 'inactive') Inactive
 
-            .col-md-6
-                .form-group
-                    label(for="position") Position
-                    input.form-control(
-                        type="number"
-                        name="position"
-                        id="position"
-                        placeholder="Auto increase"
-                        value=product.position
-                    )
+                .col-md-6
+                    .form-group
+                        label(for="position") Position
+                        input.form-control(
+                            type="number"
+                            name="position"
+                            id="position"
+                            placeholder="Auto increase"
+                            value=product.position
+                        )
 
-        .text-end.mt-4
-            button.btn.btn-primary(type="submit")
-                i.fas.fa-save.me-1
-                | Update Product
+            .text-end.mt-4
+                button.btn.btn-primary(type="submit")
+                    i.fas.fa-save.me-1
+                    | Update Product
 
-    script(src="/admin/js/product.js", defer)
-    script(src="/admin/js/script.js", defer)
+        script(src="/admin/js/product.js", defer)
+        script(src="/admin/js/script.js", defer)

@@ -2,90 +2,109 @@ extends ../../layout/default.pug
 include ../../mixins/alert.pug
 
 block main 
-    h1.mb-4.text-primary Account
-    +alert-success(5000)
-    +alert-error(5000)
+    // Kiểm tra quyền xem danh sách tài khoản
+    if role.permissions.includes('account_view') || role.permissions.includes('account_edit')
 
-    h5.mb-2 Bộ lọc trạng thái:
-    .mb-4
-        a.btn.btn-outline-secondary.me-2(href=`${prefixAdmin}/accounts?status=all`) Tất cả
-        a.btn.btn-outline-success.me-2(href=`${prefixAdmin}/accounts?status=active`) Active
-        a.btn.btn-outline-danger(href=`${prefixAdmin}/accounts?status=inactive`) Inactive
+        h1.mb-4.text-primary Account
+        +alert-success(5000)
+        +alert-error(5000)
 
-    .row.mb-3
-        .col-6
-            form.d-flex(action=`${prefixAdmin}/accounts/search`, method="GET")
-                input.form-control.me-2(type="text" name="keyword" placeholder="Tìm kiếm theo tên/email...")
-                button.btn.btn-outline-primary(type="submit") Tìm kiếm
-        .col-6.text-end
-            a.btn.btn-primary(href=`${prefixAdmin}/accounts/create`)
-                i.fas.fa-user-plus.me-2
-                | Create account
+        // Bộ lọc trạng thái chỉ cho phép xem nếu có quyền xem tài khoản
+        if role.permissions.includes('account_view')
+            h5.mb-2 Bộ lọc trạng thái:
+            .mb-4
+                a.btn.btn-outline-secondary.me-2(href=`${prefixAdmin}/accounts?status=all`) Tất cả
+                a.btn.btn-outline-success.me-2(href=`${prefixAdmin}/accounts?status=active`) Active
+                a.btn.btn-outline-danger(href=`${prefixAdmin}/accounts?status=inactive`) Inactive
 
-    table(
-        class="product-table"
-        checkbox-multi
-    )
-        thead
-            tr
-                th 
-                    input(
-                        type="checkbox"
-                        name="check-all")
-                th ID
-                th Avatar
-                th Name
-                th Status
-                th Actions
-        tbody
-            each record, index in records
-                tr  
-                    td 
+        .row.mb-3
+            .col-6
+                // Form tìm kiếm chỉ hiển thị nếu có quyền xem
+                if role.permissions.includes('account_view')
+                    form.d-flex(action=`${prefixAdmin}/accounts/search`, method="GET")
+                        input.form-control.me-2(type="text" name="keyword" placeholder="Tìm kiếm theo tên/email...")
+                        button.btn.btn-outline-primary(type="submit") Tìm kiếm
+            .col-6.text-end
+                // Nút tạo tài khoản chỉ cho phép nếu có quyền edit
+                if role.permissions.includes('account_edit')
+                    a.btn.btn-primary(href=`${prefixAdmin}/accounts/create`)
+                        i.fas.fa-user-plus.me-2
+                        | Create account
+
+        table(
+            class="product-table"
+            checkbox-multi
+        )
+            thead
+                tr
+                    th 
                         input(
                             type="checkbox"
-                            name="id"
-                            value=record._id
-                        )
-                    td #{record.role.title}
-                    td
-                        img(src=record.avatar, alt=record.fullName, class="product-image")
-                    td #{record.fullName}
-                    td
-                        if (record.status == 'active')
-                            a(
-                                href="javascript:;"
-                                data-status=record.status
-                                data-id=record._id
-                                button-change-status
-                                class="status available"
-                                ) Active
-                        else
-                            a(
-                                href="javascript:;"
-                                data-status=record.status 
-                                data-id=record._id
-                                button-change-status
-                                class="status out-of-stock"
-                                ) Inactive
-                    td
-                        a(
-                            href=`${prefixAdmin}/accounts/edit/${record._id}`
-                            class="btn btn-edit"
-                        ) Edit
+                            name="check-all")
+                    th ID
+                    th Avatar
+                    th Name
+                    th Status
+                    th Actions
+            tbody
+                each record, index in records
+                    tr  
+                        td 
+                            input(
+                                type="checkbox"
+                                name="id"
+                                value=record._id
+                            )
+                        td #{record.role.title}
+                        td
+                            img(src=record.avatar, alt=record.fullName, class="product-image")
+                        td #{record.fullName}
+                        td
+                            // Chỉ cho phép đổi trạng thái nếu có quyền edit
+                            if role.permissions.includes('account_edit')
+                                if (record.status == 'active')
+                                    a(
+                                        href="javascript:;"
+                                        data-status=record.status
+                                        data-id=record._id
+                                        button-change-status
+                                        class="status available"
+                                        ) Active
+                                else
+                                    a(
+                                        href="javascript:;"
+                                        data-status=record.status 
+                                        data-id=record._id
+                                        button-change-status
+                                        class="status out-of-stock"
+                                        ) Inactive
+                            else
+                                // Nếu không có quyền edit thì chỉ hiển thị trạng thái mà không cho đổi
+                                if (record.status == 'active')
+                                    span.status.available Active
+                                else
+                                    span.status.out-of-stock Inactive
+                        td
+                            // Các nút chỉnh sửa, xem chi tiết, xóa theo quyền
+                            if role.permissions.includes('account_edit')
+                                a(
+                                    href=`${prefixAdmin}/accounts/edit/${record._id}`
+                                    class="btn btn-edit"
+                                ) Edit
+                            if role.permissions.includes('account_view')
+                                a(
+                                    href=`${prefixAdmin}/accounts/detail/${record._id}`
+                                    class="btn btn-secondary"
+                                ) Detail
+                            if role.permissions.includes('account_edit')
+                                button(
+                                    class="btn btn-delete"
+                                    data-id=record._id
+                                    button-delete
+                                ) Delete
 
-                            a(
-                                href=`${prefixAdmin}/accounts/detail/${record._id}`
-                                class="btn btn-secondary"
-                        ) Detail
-
-                        button(
-                            class="btn btn-delete"
-                            data-id=record._id
-                            button-delete
-                        ) Delete
-
-
-    if !records || records.length === 0
-        .alert.alert-warning.mt-3.text-center Không có tài khoản nào được tìm thấy.     
-
-
+        if !records || records.length === 0
+            .alert.alert-warning.mt-3.text-center Không có tài khoản nào được tìm thấy.
+    else
+        .alert.alert-danger.mt-3.text-center Bạn không có quyền truy cập trang này.
+        a.btn.btn-secondary(href=`${prefixAdmin}/dashboard`) Quay lại trang quản trị

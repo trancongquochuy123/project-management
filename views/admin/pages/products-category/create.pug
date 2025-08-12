@@ -3,57 +3,58 @@ include ../../mixins/alert.pug
 include ../../mixins/select-tree.pug
 
 block main
-    h1 Create Product
-    +alert-error(5000)
+    if role.permissions.includes('product_category_create')
+        h1 Create Product
+        +alert-error(5000)
 
-    form(
-        action=`${prefixAdmin}/products-category/create`
-        method="POST"
-        enctype="multipart/form-data"
-    )
-        .row.g-3
-            .col-6
-                .form-group
-                    label(for="title") Title
-                    input.form-control(type="text" name="title" id="title" placeholder="Product title" required)
+        form(
+            action=`${prefixAdmin}/products-category/create`
+            method="POST"
+            enctype="multipart/form-data"
+        )
+            .row.g-3
+                .col-6
+                    .form-group
+                        label(for="title") Title
+                        input.form-control(type="text" name="title" id="title" placeholder="Product title" required)
 
-            .col-6
-                .form-group
-                    label(for="parent_id") Parent Category
-                    select.form-control(name="parent_id" id="parent_id")
-                        option(value="") Select Parent Category
-                        if (records)
-                            +select-tree(records)
+                .col-6
+                    .form-group
+                        label(for="parent_id") Parent Category
+                        select.form-control(name="parent_id" id="parent_id")
+                            option(value="") Select Parent Category
+                            if (records)
+                                +select-tree(records)
 
-            .col-6
-                .form-group
-                    label(for="description") Description
-                    textarea.form-control.textarea-tinymce(name="description" id="description" rows="3" placeholder="Product description")
+                .col-6
+                    .form-group
+                        label(for="description") Description
+                        textarea.form-control.textarea-tinymce(name="description" id="description" rows="3" placeholder="Product description")
 
-            .col-6
-                div(
-                    class="form-group image-preview" 
-                    upload-image
-                )
-                    label(for="thumbnail") Thumbnail
-                    input.form-control(type="file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-input)
-                    img.form-img-preview( src="" upload-image-preview)
-                    button.close-button(type="button" upload-image-remove class="d-none") X
+                .col-6
+                    div(
+                        class="form-group image-preview" 
+                        upload-image
+                    )
+                        label(for="thumbnail") Thumbnail
+                        input.form-control(type="file" name="thumbnail" id="thumbnail" accept="image/*" upload-image-input)
+                        img.form-img-preview( src="" upload-image-preview)
+                        button.close-button(type="button" upload-image-remove class="d-none") X
 
-            .col-4
-                .form-group
-                    label(for="status") Status
-                    select.form-control(name="status" id="status")
-                        option(value="active") Active
-                        option(value="inactive") Inactive
+                .col-4
+                    .form-group
+                        label(for="status") Status
+                        select.form-control(name="status" id="status")
+                            option(value="active") Active
+                            option(value="inactive") Inactive
 
-            .col-4
-                .form-group
-                    label(for="position") Position
-                    input.form-control(type="number" name="position" id="position" placeholder="Auto Increase" )
+                .col-4
+                    .form-group
+                        label(for="position") Position
+                        input.form-control(type="number" name="position" id="position" placeholder="Auto Increase" )
 
-            .col-12.text-end.mt-4
-                button.btn.btn-primary(type='submit') Create Product
+                .col-12.text-end.mt-4
+                    button.btn.btn-primary(type='submit') Create Product
 
-    script(src="/admin/js/product.js")
-    script(src="/admin/js/script.js")
+        script(src="/admin/js/product.js")
+        script(src="/admin/js/script.js")

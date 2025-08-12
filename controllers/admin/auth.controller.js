@@ -23,7 +23,6 @@ module.exports.loginPost = async (req, res) => {
         deleted: false
     });
 
-
     if (!user) {
         req.flash("error", "Invalid email");
         return res.redirect(`${systemConfig.prefixAdmin}/auth/login`);
@@ -40,12 +39,18 @@ module.exports.loginPost = async (req, res) => {
         return res.redirect(`${systemConfig.prefixAdmin}/auth/login`);
     }
 
-    res.cookie("token", user.token);
+    res.cookie("token", user.token, {
+        httpOnly: true,
+        path: '/',         // đảm bảo cookie có cùng path với khi xóa
+        // secure: true,    // bật nếu dùng HTTPS
+        maxAge: 24 * 60 * 60 * 1000, // thời gian sống cookie (ví dụ 1 ngày)
+    });
+
     res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
 }
 
 // [GET] admin/auth/logout
 module.exports.logout = (req, res) => {
-    res.clearCookie("token");
+    res.clearCookie("token", { path: '/' });
     res.redirect(`${systemConfig.prefixAdmin}/auth/login`);
 }

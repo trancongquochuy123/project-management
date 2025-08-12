@@ -212,8 +212,6 @@ module.exports.updatePermissions = async (req, res) => {
         }
       );
       
-      console.log(`✅ Updated permissions for role: ${role.title}`);
-      console.log(`   New permissions: ${newPermissions.join(', ')}`);
     }
     
     req.flash('success', 'Cập nhật phân quyền thành công!');
@@ -280,13 +278,9 @@ module.exports.updatePermissionsAdvanced = async (req, res) => {
         updated: updateResult.modifiedCount > 0
       });
       
-      console.log(`✅ Updated permissions for role: ${role.title}`);
-      console.log(`   Old permissions: ${role.permissions.join(', ')}`);
-      console.log(`   New permissions: ${filteredPermissions.join(', ')}`);
     }
     
     // Log kết quả cập nhật
-    console.log('📊 Permission update summary:');
     updateResults.forEach(result => {
       console.log(`   ${result.roleName}: ${result.updated ? 'Updated' : 'No changes'}`);
     });

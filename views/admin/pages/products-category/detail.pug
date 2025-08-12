@@ -3,54 +3,55 @@ include ../../mixins/alert.pug
 include ../../mixins/select-tree.pug
 
 block main
-    h1 Category Details
-    +alert-error(5000)
+    if role.permissions.includes('product_category_view')
+        h1 Category Details
+        +alert-error(5000)
 
-    .row.g-3
-        .col-6
-            .form-group
-                label Title
-                p.form-control-static= record.title
+        .row.g-3
+            .col-6
+                .form-group
+                    label Title
+                    p.form-control-static= record.title
 
-        .col-6
-            .form-group
-                label Parent Category
-                if records
-                    - const parent = records.find(r => r._id.toString() === (record.parent_id || '').toString())
-                    if parent
-                        p.form-control-static= parent.title
+            .col-6
+                .form-group
+                    label Parent Category
+                    if records
+                        - const parent = records.find(r => r._id.toString() === (record.parent_id || '').toString())
+                        if parent
+                            p.form-control-static= parent.title
+                        else
+                            p.form-control-static _(None)_
                     else
                         p.form-control-static _(None)_
-                else
-                    p.form-control-static _(None)_
 
-        .col-12
-            .form-group
-                label Description
-                if record.description
-                    //- Render HTML safely
-                    .form-control-static !{record.description}
-                else
-                    p.form-control-static _(No description)_
+            .col-12
+                .form-group
+                    label Description
+                    if record.description
+                        //- Render HTML safely
+                        .form-control-static !{record.description}
+                    else
+                        p.form-control-static _(No description)_
 
-        .col-6
-            .form-group
-                label Thumbnail
-                if record.thumbnail
-                    img(src=record.thumbnail alt="Thumbnail" class="img-fluid")
-                else
-                    p.form-control-static _(No thumbnail)_
+            .col-6
+                .form-group
+                    label Thumbnail
+                    if record.thumbnail
+                        img(src=record.thumbnail alt="Thumbnail" class="img-fluid")
+                    else
+                        p.form-control-static _(No thumbnail)_
 
-        .col-3
-            .form-group
-                label Status
-                p.form-control-static.text-capitalize= record.status
+            .col-3
+                .form-group
+                    label Status
+                    p.form-control-static.text-capitalize= record.status
 
-        .col-3
-            .form-group
-                label Position
-                p.form-control-static= record.position || '-'
+            .col-3
+                .form-group
+                    label Position
+                    p.form-control-static= record.position || '-'
 
-    .mt-4.text-end
-        a.btn.btn-secondary(href=`${prefixAdmin}/products-category`) Back
-        a.btn.btn-primary(href=`${prefixAdmin}/products-category/edit/${record._id}`) Edit
+        .mt-4.text-end
+            a.btn.btn-secondary(href=`${prefixAdmin}/products-category`) Back
+            a.btn.btn-primary(href=`${prefixAdmin}/products-category/edit/${record._id}`) Edit
