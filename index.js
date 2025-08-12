@@ -6,6 +6,7 @@ const flash = require('express-flash');
 const cookieParser = require('cookie-parser'); 
 const session = require('express-session');
 const multer  = require('multer')
+const moment  = require('moment')
 const upload = multer({ dest: 'uploads/' })
 const favicon = require('serve-favicon');
 
@@ -46,6 +47,7 @@ app.set('view engine', 'pug');
 
 // App Locals variables
 app.locals.prefixAdmin = systemConfig.prefixAdmin; 
+app.locals.moment = moment;
 
 app.use(express.static(`${__dirname}/public`));
 

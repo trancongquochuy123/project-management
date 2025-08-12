@@ -1,6 +1,6 @@
 const Product = require("../../models/product.model");
 const ProductCategory = require("../../models/product-category.model");
-
+const Account = require("../../models/account.model");
 const systemConfig = require("../../config/system");
 
 const filterStatusHelper = require("../../helper/filterStatus");
@@ -137,7 +137,10 @@ module.exports.changeMulti = async (req, res) => {
             case "delete-all":
                 await Product.updateMany({ _id: { $in: ids } }, {
                     deleted: true,
-                    deletedAt: new Date()
+                    deletedBy: {
+                        accountId: res.locals.user._id,
+                        deletedAt: new Date(),
+                    }
                 });
                 req.flash('success', `Delete ${ids.length} product successfully!`);
                 break;
@@ -170,7 +173,10 @@ module.exports.deleteItem = async (req, res) => {
 
         await Product.findByIdAndUpdate(id, {
             deleted: true,
-            deletedAt: new Date()
+            deletedBy: {
+                accountId: res.locals.user._id,
+                deletedAt: new Date(),
+            }
         });
 
         req.flash('success', 'Delete product successfully!');
@@ -193,6 +199,15 @@ module.exports.create = async (req, res) => {
         const records = await ProductCategory.find(findProducts);
 
         const newCategory = createTreeHelper.createTree(records);
+
+        for (const record of records) {
+            if (record.createdBy && record.createdBy.accountId) {
+                const account = await Account.findById(record.createdBy.accountId);
+                if (!account) continue;
+                record.accountFullname = account.fullName;
+            }
+        }
+
 
         res.render("admin/pages/products/create.pug", {
             pageTitle: "Create Product",
@@ -220,6 +235,11 @@ module.exports.createProduct = async (req, res) => {
         }
 
         req.body.description = await processDescription(req.body.description);
+
+        req.body.createdBy = {
+            accountId: res.locals.user._id,
+            createdAt: new Date()
+        }
 
         const product = new Product(req.body);
         await product.save();

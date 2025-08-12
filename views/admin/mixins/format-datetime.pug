@@ -1,0 +1,17 @@
+mixin formatDatetime(time)
+    if time
+        span= moment(time).format('DD/MM/YYYY HH:mm:ss')
+    else
+        span= 'N/A'
+
+mixin formatDate(date)
+    if date
+        span= moment(date).format('DD/MM/YYYY')
+    else
+        span= 'N/A'
+
+mixin formatTime(time)
+    if time
+        span= moment(time).format('HH:mm:ss')
+    else
+        span= 'N/A'

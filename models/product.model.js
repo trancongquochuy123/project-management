@@ -37,21 +37,22 @@ const productSchema = new mongoose.Schema(
         shippingInformation: { type: String },
         availabilityStatus: { type: String },
         reviews: [reviewSchema],
-        returnPolicy: { type: String },
-        minimumOrderQuantity: { type: Number },
-        meta: {
-            createdAt: { type: Date, default: Date.now },
-            updatedAt: { type: Date, default: Date.now },
-            barcode: { type: String, default: '' },
-            qrCode: { type: String, default: '' }
-        },
         images: [String],
         thumbnail: { type: String },
         deleted: { type: Boolean, default: false },
-        deletedAt: { type: Date },
         status: { type: String, enum: ['active', 'inactive'], default: 'active' },
         position: { type: Number },
-        slug: { type: String, slug: "title", unique: true }
+        slug: { type: String, slug: "title", unique: true },
+        createdBy: {
+            accountId: { type: mongoose.Schema.Types.ObjectId },
+            createdAt: { type: Date, default: Date.now }
+        },
+        deletedBy: {
+            accountId: { type: mongoose.Schema.Types.ObjectId },
+            deletedAt: { type: Date }
+        }
+        
+        
     },
     {
         timestamps: true,
