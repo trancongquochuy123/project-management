@@ -6,4 +6,7 @@ Header.header
                     a(href='/admin/dashboard')
                         img(src='/images/logo.jpg', alt='Logo', class='logo')
             .col-9
-                        
+                div(class='header-right d-flex justify-content-end align-items-center')
+                    ul.navbar-nav
+                        li.nav-item
+                            a.nav-link.text-white(href=`${prefixAdmin}/auth/logout`) Logout
