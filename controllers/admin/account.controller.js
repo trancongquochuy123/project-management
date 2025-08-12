@@ -5,7 +5,7 @@ var md5 = require('md5');
 
 // [GET] admin/accounts
 module.exports.index = async (req, res) => {
-
+    
     let findAccounts = {
         deleted: false,
     };

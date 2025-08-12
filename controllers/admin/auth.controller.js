@@ -3,10 +3,14 @@ const systemConfig = require("../../config/system");
 var md5 = require('md5');
 
 // [GET] admin/dashboard
-module.exports.login = (req, res) => { 
-    res.render("admin/pages/auth/login.pug", {
-        pageTitle: "Login page",
-    });
+module.exports.login = (req, res) => {
+    if (req.cookies.token) {
+        return res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
+    } else {
+        res.render("admin/pages/auth/login.pug", {
+            pageTitle: "Login page",
+        });
+    }
 }
 
 // [POST] admin/auth/login
@@ -14,10 +18,10 @@ module.exports.loginPost = async (req, res) => {
     const { email, password } = req.body;
 
     // TODO: Handle login logic here
-    const user = await Account.findOne({ 
-        email: email, 
+    const user = await Account.findOne({
+        email: email,
         deleted: false
-     });
+    });
 
 
     if (!user) {

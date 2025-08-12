@@ -4,9 +4,14 @@ Header.header
             .col-3
                 .inner-logo
                     a(href='/admin/dashboard')
-                        img(src='/images/logo.jpg', alt='Logo', class='logo')
+                        img(src='/images/logo.jpg' alt='Logo' class='logo')
             .col-9
-                div(class='header-right d-flex justify-content-end align-items-center')
-                    ul.navbar-nav
+                div.header-right.d-flex.justify-content-end.align-items-center
+                    ul.navbar-nav.flex-row.gap-3
                         li.nav-item
-                            a.nav-link.text-white(href=`${prefixAdmin}/auth/logout`) Logout
+                            a.nav-link.text-white.text-uppercase.fw-semibold.px-3.py-2.rounded.border.border-white.border-opacity-25.transition(
+                                href=`${prefixAdmin}/auth/logout`
+                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'"
+                                onmouseout="this.style.backgroundColor='transparent'"
+                            ) Logout
+
