@@ -109,7 +109,7 @@ module.exports.editAccount = async (req, res) => {
         const account = await Account.findOne({ _id: id });
 
         const existingEmail = await Account.findOne({
-            id: { $ne: id },
+            _id: { $ne: id },
             email,
             deleted: false,
          });

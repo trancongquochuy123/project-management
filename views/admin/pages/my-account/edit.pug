@@ -1,0 +1,52 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+
+
+block main 
+  +alert-success(5000)
+  +alert-error(5000)
+  .container.mt-5
+    .row.justify-content-center
+      .col-md-8
+        .card.shadow-sm.rounded-3
+          .card-header.bg-primary.text-white
+            h2.mb-0 Chỉnh sửa thông tin cá nhân
+
+          .card-body
+            form(
+              action=`${prefixAdmin}/my-account/edit?_method=PATCH`
+              method="POST" 
+              enctype="multipart/form-data")
+              .mb-3
+                label.form-label(for="fullName") Họ và tên
+                input.form-control#fullName(type="text" name="fullName" value=user.fullName placeholder="Nhập họ và tên")
+
+              .mb-3
+                label.form-label(for="email") Email
+                input.form-control#email(type="email" name="email" value=user.email placeholder="Nhập email")
+
+              .mb-3
+                label.form-label(for="phone") Số điện thoại
+                input.form-control#phone(type="text" name="phone" value=user.phone placeholder="Nhập số điện thoại")
+
+              .mb-3
+                label.form-label(for="status") Trạng thái
+                select.form-select#status(name="status")
+                  option(value="active" selected=(user.status === 'active')) Hoạt động
+                  option(value="inactive" selected=(user.status !== 'active')) Không hoạt động
+
+              .mb-3 
+                label.form-label(for="password") Mật khẩu (Để trống nếu không muốn thay đổi)
+                input.form-control#password(type="password" name="password" placeholder="Nhập mật khẩu mới nếu bạn muốn thay đổi")
+
+              .mb3 
+                label.form-label(for="avatar") Ảnh đại diện
+                input.form-control#avatar(type="file" name="avatar" accept="image/*")
+                if user.avatar
+                  img.mt-3(src=`${user.avatar}` alt="Avatar" style="max-width: 150px; max-height: 150px; object-fit: cover; border-radius: 8px;")
+
+              .d-flex.justify-content-between.mt-4
+                a.btn.btn-secondary(href=`${prefixAdmin}/my-account`) Quay lại
+                button.btn.btn-success(type="submit")
+                  i.fa.fa-save.me-2
+                  | Lưu thay đổi

@@ -1,0 +1,46 @@
+//- views/account/index.pug
+extends ../../layout/default.pug
+
+block main 
+    .container.mt-5
+    .row.justify-content-center
+        .col-md-8
+            .card.shadow-sm.rounded-3
+                .card-header.bg-primary.text-white
+                    h2.mb-0 Tài khoản của tôi
+                    //- <div>#{JSON.stringify(user)}</div>
+                    
+                .card-body
+                    //- Profile Info
+                    h4.mb-3 Thông tin cá nhân
+                    dl.row
+
+                        dt.col-sm-4 Avatar
+                        dd.col-sm-8
+                            if user.avatar
+                                img(src=`${user.avatar}` alt="Avatar" class="img-fluid rounded-circle" style="width: 100px; height: 100px; object-fit: cover;")
+                            else
+                                span.text-muted Chưa cập nhật
+
+                        dt.col-sm-4 Tên
+                        dd.col-sm-8 #{user.fullName || 'Chưa cập nhật'}
+
+                        dt.col-sm-4 Email
+                        dd.col-sm-8 #{user.email || 'Chưa cập nhật'}
+
+                        dt.col-sm-4 Số điện thoại
+                        dd.col-sm-8 #{user.phone || 'Chưa cập nhật'}
+
+                        dt.col-sm-4 Vai trò
+                        dd.col-sm-8 #{role ? role.title : 'Không có quyền'}
+
+                        dt.col-sm-4 Trạng thái
+                        dd.col-sm-8
+                            if user.status === 'active'
+                                span.badge.bg-success Hoạt động
+                            else
+                                span.badge.bg-secondary Không hoạt động
+
+                    a.btn.btn-warning(href=`${prefixAdmin}/my-account/edit`)
+                        i.fa.fa-edit.me-2
+                        | Chỉnh sửa thông tin

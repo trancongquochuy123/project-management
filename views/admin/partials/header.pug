@@ -8,6 +8,12 @@ Header.header
             .col-9
                 div.header-right.d-flex.justify-content-end.align-items-center
                     ul.navbar-nav.flex-row.gap-3
+                        li.nav-item 
+                            a.nav-link.text-white.text-uppercase.fw-semibold.px-3.py-2.rounded.border.border-white.border-opacity-25.transition.mr-4(
+                                href=`${prefixAdmin}/my-account`
+                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'"
+                                onmouseout="this.style.backgroundColor='transparent'"
+                            ) #{user.fullName}                            
                         li.nav-item
                             a.nav-link.text-white.text-uppercase.fw-semibold.px-3.py-2.rounded.border.border-white.border-opacity-25.transition(
                                 href=`${prefixAdmin}/auth/logout`
