@@ -1,0 +1,41 @@
+mixin product-item(product)
+    - // helper format tiền (USD). Thay đổi theo locale/currency nếu cần.
+    - var fmt = function(v){ return (v === undefined || v === null) ? '' : '$' + Number(v).toFixed(2); }
+    .product-card
+
+        if product.discountPercentage && Number(product.discountPercentage) > 0
+            .badge #{product.discountPercentage}% OFF
+
+        // Badge hot/featured
+        if product.feature && Number(product.feature) === 1
+            .badge.badge-featured 🔥 HOT
+
+
+        .product-tumb
+            .inner-image
+                img(src=product.thumbnail alt=product.name || 'Product image')
+
+        .product-details
+            - var category = (product.product_category_id && product.product_category_id.title) || product.category || 'N/A'
+            span.product-category= category
+
+            h4
+                a(href=`/products/${product.slug}`)= product.title
+
+            if product.description
+                p.product-desc!= product.description
+
+            .product-bottom-details
+                .product-price
+                    if product.priceNew
+                        small= fmt(product.price)
+                        |  
+                        span= fmt(product.priceNew)
+                    else
+                        span= fmt(product.price)
+
+                .product-links
+                    a(href=`/wishlist/add/${product.id}` aria-label="Add to wishlist")
+                        i.fa.fa-heart
+                    a(href=`/cart/add/${product.id}` aria-label="Add to cart")
+                        i.fa.fa-shopping-cart

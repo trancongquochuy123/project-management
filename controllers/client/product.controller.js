@@ -7,7 +7,9 @@ module.exports.index = async (req, res) => {
         const products = await Product.find({
             deleted: false,
             status: "active",
-        }).sort({ position: "desc" });
+        })
+            .populate('product_category_id', 'title')
+            .sort({ position: "desc" });
 
         // products.forEach(item => {
         //     item.priceNew = (item.price - (item.price * item.discountPercentage) / 100).toFixed(2); 

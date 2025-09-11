@@ -1,0 +1,5 @@
+mixin product-layout(products)
+    include product-item.pug
+    .product-container 
+        each product in products
+            +product-item(product)

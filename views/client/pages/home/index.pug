@@ -1,5 +1,16 @@
+
 extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/product-layout.pug
 
 block main
-  h1 Welcome to the Product Page
-  p This is the Product page of our application.
+  .container.my-3
+    .row
+      .col-12
+        +box-head("Outstanding Products")
+
+    .row
+      if products.length
+        +product-layout(products)
+      else
+        p.text-muted No products available.
