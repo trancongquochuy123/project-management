@@ -41,6 +41,7 @@ const productSchema = new mongoose.Schema(
         thumbnail: { type: String },
         deleted: { type: Boolean, default: false },
         status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+        feature: { type: String, enum: ['1', '0'], default: '0' },
         position: { type: Number },
         slug: { type: String, slug: "title", unique: true },
         createdBy: {

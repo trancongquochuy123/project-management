@@ -123,6 +123,13 @@ block main
 
                 .col-md-6
                     .form-group
+                        label(for="feature") Outstanding Products
+                        select.form-control(name="feature" id="feature")
+                            option(value="1", selected=product.feature === '1') Outstanding
+                            option(value="0", selected=product.feature === '0') Normal
+
+                .col-md-6
+                    .form-group
                         label(for="position") Position
                         input.form-control(
                             type="number"

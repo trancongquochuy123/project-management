@@ -65,6 +65,13 @@ block main
 
                 .col-4
                     .form-group
+                        label(for="feature") Outstanding Products 
+                        select.form-control(name="feature" id="feature")
+                            option(value="1") Outstanding 
+                            option(value="0") Normal
+
+                .col-4
+                    .form-group
                         label(for="position") Position
                         input.form-control(type="number" name="position" id="position" placeholder="Auto Increase" )
 
