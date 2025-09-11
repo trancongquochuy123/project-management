@@ -14,3 +14,14 @@ block main
         +product-layout(products)
       else
         p.text-muted No products available.
+
+  .container.my-3
+    .row
+      .col-12
+        +box-head("New Products")
+
+    .row
+      if productsSorted.length
+        +product-layout(productsSorted)
+      else
+        p.text-muted No products available.
