@@ -1,15 +1,18 @@
+include ../mixins/sub-menu.pug
+
 Header.header 
     .container 
         .row.align-items-center
             .col-3
                 .inner-logo
                     a(href='/')
-                        img(src='/images/logo.jpg', alt='Logo', class='logo')
+                        img(src='/images/logo.jpg' alt='Logo' class='logo')
             .col-9
                 .inner-menu 
-                    ul
-                        li
+                    ul.menu
+                        li.sub-menu
                             a(href='/') Home
-                        li
-                            a(href='/products') About Us
-                        
+                        li.sub-menu
+                            - const pathProduct = '/products';
+                            a(href=pathProduct) Sản phẩm
+                            +sub-menu(layoutProductCategories, pathProduct)

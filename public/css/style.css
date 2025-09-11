@@ -1,94 +1,278 @@
 /* Start Header */
 .header {
-    border-bottom: 1px solid #ccc;
-    padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 20px;
 }
 
 .header .inner-logo img {
-    max-width: auto;
-    max-height: 50px;
+  max-width: auto;
+  max-height: 50px;
 }
 
-.header .inner-menu > ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-items: flex-end;
-    flex-wrap: wrap;
+.header .inner-menu>ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-items: flex-end;
+  flex-wrap: wrap;
 }
 
-.header .inner-menu > ul > li {
-    margin: 0 10px;
+.header .inner-menu>ul>li {
+  margin: 0 10px;
 }
 
 /* End Header */
 /* Start Footer */
 .footer {
-    background: #333;
-    color: #fff;
-    border-top: 1px solid #ccc;
-    padding: 10px 20px;
-    text-align: center;
+  background: #333;
+  color: #fff;
+  border-top: 1px solid #ccc;
+  padding: 10px 20px;
+  text-align: center;
 }
+
 /* End Footer */
 
 
 .box-head {
-    text-align: center;
-    margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.box-head .inner-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
+
+.product-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 250px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+}
+
+.product-item:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product-item .inner-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.product-item .inner-content {
+  padding: 15px;
+  background-color: #fff;
+}
+
+.product-item .inner-title {
+  font-size: 18px;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.product-item .inner-price-old {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.product-item .inner-price-new {
+  color: #e53935;
+  font-weight: bold;
+}
+
+.product-item .inner-discount {
+  color: #43a047;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+:root {
+  --menu-bg: #ffffff;
+  --menu-item: #374151;
+  /* text slate */
+  --menu-hover: #d97706;
+  /* amber 600 */
+  --submenu-bg: #ffffff;
+  --muted: #9ca3af;
+  --radius: 8px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --menu-height: 48px;
+  --font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+}
+
+/* reset */
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* menu chính */
+ul.menu {
+  display: flex;
+  align-items: center;
+  background: var(--menu-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-family: var(--font-family);
+  padding: 4px;
+}
+
+/* items */
+ul.menu>li {
+  position: relative;
+}
+
+/* link top */
+ul.menu>li>a {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  height: var(--menu-height);
+  color: var(--menu-item);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: var(--radius);
+  transition: background .2s ease, color .2s ease;
+}
+
+ul.menu>li>a:hover {
+  background: #fff7ed;
+  /* cam nhạt */
+  color: var(--menu-hover);
+}
+
+/* caret top */
+ul.menu>li:has(ul)>a::after {
+  content: "▾";
+  margin-left: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* sub menu */
+ul.menu li ul {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--submenu-bg);
+  min-width: 200px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 6px 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+  z-index: 1000;
+}
+
+ul.menu li:hover>ul {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* sub item */
+ul.menu li ul li a {
+  display: block;
+  padding: 10px 14px;
+  color: var(--menu-item);
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: var(--radius);
+  transition: background .2s ease, color .2s ease;
+}
+
+ul.menu li ul li a:hover {
+  background: #fff7ed;
+  color: var(--menu-hover);
+}
+
+/* cấp 2 ngang */
+ul.menu li ul li ul {
+  top: -5px;
+  left: 100%;
+  margin-left: 4px;
+}
+
+/* caret sub */
+ul.menu li ul li:has(ul)>a::after {
+  content: "▸";
+  float: right;
+  color: var(--muted);
+}
+
+/* responsive cơ bản */
+@media (max-width: 768px) {
+  ul.menu {
+    flex-direction: column;
+    align-items: stretch;
   }
-  
-  .box-head .inner-title {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
+
+  ul.menu li ul {
+    position: static;
+    box-shadow: none;
+    opacity: 1;
+    pointer-events: auto;
   }
-  
-  .product-item {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    max-width: 250px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: 0.3s;
-  }
-  
-  .product-item:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .product-item .inner-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  
-  .product-item .inner-content {
-    padding: 15px;
-    background-color: #fff;
-  }
-  
-  .product-item .inner-title {
-    font-size: 18px;
-    color: #222;
-    margin-bottom: 10px;
-  }
-  
-  .product-item .inner-price-old {
-    text-decoration: line-through;
-    color: #999;
-  }
-  
-  .product-item .inner-price-new {
-    color: #e53935;
-    font-weight: bold;
-  }
-  
-  .product-item .inner-discount {
-    color: #43a047;
-    font-size: 14px;
-    margin-top: 5px;
-  }
-  
+}
+
+
+
+/* 1) Chồng đè nhẹ để tránh gap
+ul.menu li ul {
+  top: calc(var(--menu-height) - 4px); đẩy lên 4px để chồng lên parent
+  left: 0;
+}
+
+Cấp 2+ (tránh gap theo chiều ngang)
+ul.menu li ul li ul {
+  left: calc(100% - 6px); chồng nhẹ sang phải
+  top: -4px; canh ngay, nhỏ negative để overlap
+} */
+
+/* 2) Vùng đệm vô hình trên li cha để "bắt" chuột */
+ul.menu li.has-submenu {
+  position: relative;
+  /* cần để pseudo hoạt động */
+}
+
+/* pseudo element kéo một dải trong suốt nằm giữa parent và submenu */
+ul.menu li.has-submenu::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--menu-height) - 2px);
+  /* bắt đầu ngay dưới parent */
+  height: 12px;
+  /* điều chỉnh: 8-18px tùy muốn */
+  pointer-events: auto;
+  /* bắt chuột */
+  /* nhìn trong suốt */
+  background: transparent;
+  z-index: 999;
+  /* nằm trên nền để nhận pointer */
+}
+
+/* 3) class .open để show submenu (JS toggle) - tương thích với opacity method */
+ul.menu li .open {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  pointer-events: auto !important;
+}
+
+/* (tuỳ chọn) khi dùng JS + class "is-open" trên li để style caret */
+ul.menu li.is-open>a::after {
+  transform: rotate(180deg);
+  color: var(--menu-hover);
+}
+
+/* End Menu đa cấp */

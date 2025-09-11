@@ -1,60 +1,68 @@
-mixin table-tree(records, level = 1)
+mixin table-tree(records, role, level = 1)
     each product, index in records
-        - const prefix = Array(level + 1).join('-- '); // Create indentation for tree structure
-        tr  
-            td 
-                input(
-                    type="checkbox"
-                    name="id"
-                    value=product._id
-                )
-            td #{product.index}
+        - const prefix = Array(level + 1).join('-- '); // tạo indent cho tree
+        tr
+            if role.permissions.includes('product_category_delete') || role.permissions.includes('product_category_edit')
+                td 
+                    input(
+                        type="checkbox"
+                        name="id"
+                        value=product._id
+                    )
+            td #{product._id}
             td
-                img(src=product.thumbnail, alt=product.title, class="product-image")
+                if product.thumbnail
+                    img(src=product.thumbnail, alt=product.title, class="product-image")
             td #{prefix} #{product.title}
             td
                 input(
-                class="form-control"
-                style="width: 150px;"
-                type="number"
-                value=product.position
-                min=1
-                name="position"
+                    class="form-control"
+                    style="width: 150px;"
+                    type="number"
+                    value=product.position
+                    min=1
+                    name="position"
+                    readonly=!role.permissions.includes('product_category_edit')
                 )
             td
-                if (product.status == 'active')
-                    a(
-                        href="javascript:;"
-                        data-status=product.status
-                        data-id=product._id
-                        button-change-status
-                        class="status available"
+                if role.permissions.includes('product_category_edit')
+                    if product.status == 'active'
+                        a(
+                            href="javascript:;"
+                            data-status=product.status
+                            data-id=product._id
+                            button-change-status
+                            class="status available"
                         ) Active
-                else
-                    a(
-                        href="javascript:;"
-                        data-status=product.status 
-                        data-id=product._id
-                        button-change-status
-                        class="status out-of-stock"
+                    else
+                        a(
+                            href="javascript:;"
+                            data-status=product.status 
+                            data-id=product._id
+                            button-change-status
+                            class="status out-of-stock"
                         ) Inactive
+                else
+                    if product.status == 'active'
+                        span.available Active
+                    else
+                        span.out-of-stock Inactive
             td
-                a(
-                    href=`${prefixAdmin}/products-category/edit/${product._id}`
-                    class="btn btn-edit"
-                ) Edit
-
+                if role.permissions.includes('product_category_edit')
                     a(
-                        href=`${prefixAdmin}/products-category/detail/${product._id}`
-                        class="btn btn-secondary"
+                        href=`${prefixAdmin}/products-category/edit/${product._id}`
+                        class="btn btn-edit"
+                    ) Edit
+                a(
+                    href=`${prefixAdmin}/products-category/detail/${product._id}`
+                    class="btn btn-secondary"
                 ) Detail
-
-                button(
-                    class="btn btn-delete"
-                    data-id=product._id
-                    button-delete
-                ) Delete
+                if role.permissions.includes('product_category_delete')
+                    button(
+                        class="btn btn-delete"
+                        data-id=product._id
+                        button-delete
+                    ) Delete
 
         if product.children && product.children.length > 0
-            //- Recursive call to display child products    
-            +table-tree(product.children, level + 1)
+            +table-tree(product.children, role, level + 1)

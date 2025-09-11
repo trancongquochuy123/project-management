@@ -30,70 +30,11 @@ block main
                 th Status
                 th Actions
         tbody
-            each record in records
+            if records && records.length > 0
+                +table-tree(records, role)
+            else
                 tr
-                    if role.permissions.includes('product_category_delete') || role.permissions.includes('product_category_edit')
-                        td
-                            input(
-                                type="checkbox"
-                                name="id"
-                                value=record._id
-                            )
-                    td #{record._id} 
-                    td
-                        if record.thumbnail
-                            img(src=record.thumbnail, alt=record.title, class="product-image")
-                    td #{record.title}
-                    td 
-                        input(
-                            class="form-control"
-                            style="width: 150px;"
-                            type="number"
-                            value=record.position
-                            min=1
-                            name="position"
-                            readonly=!role.permissions.includes('product_category_edit')
-                        )
-                    td
-                        if role.permissions.includes('product_category_edit')
-                            if record.status == 'active'
-                                a(
-                                    href="javascript:;"
-                                    data-status=record.status
-                                    data-id=record._id
-                                    button-change-status
-                                    class="status available"
-                                ) Active
-                            else
-                                a(
-                                    href="javascript:;"
-                                    data-status=record.status
-                                    data-id=record._id
-                                    button-change-status
-                                    class="status out-of-stock"
-                                ) Inactive
-                        else 
-                            if record.status == 'active'
-                                span.available Active
-                            else
-                                span.out-of-stock Inactive
-                    td
-                        if role.permissions.includes('product_category_edit')
-                            a(
-                                href=`${prefixAdmin}/products-category/edit/${record._id}`
-                                class="btn btn-edit"
-                            ) Edit
-                        a(
-                            href=`${prefixAdmin}/products-category/detail/${record._id}`
-                            class="btn btn-secondary"
-                        ) Detail
-                        if role.permissions.includes('product_category_delete')
-                            button(
-                                class="btn btn-delete"
-                                data-id=record._id
-                                button-delete
-                            ) Delete
-
+                    td(colspan="7") No products found.
     form(
         id="form-change-status"
         action=""
