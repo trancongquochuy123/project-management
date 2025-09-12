@@ -20,7 +20,7 @@ mixin product-item(product)
             span.product-category= category
 
             h4
-                a(href=`/products/${product.slug}`)= product.title
+                a(href=`/products/detail/${product.slug}`)= product.title
 
             if product.description
                 p.product-desc!= product.description

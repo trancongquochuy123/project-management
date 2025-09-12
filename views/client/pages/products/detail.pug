@@ -2,92 +2,383 @@ extends ../../layouts/default.pug
 include ../../mixins/box-head.pug
 
 block main
-    .container
-        h1 Product Detail - #{product.title}
+    // Breadcrumb Section
+    .container-fluid.py-3.bg-light
+        .container
+            nav(aria-label="breadcrumb")
+                ol.breadcrumb.mb-0
+                    li.breadcrumb-item
+                        a(href="/") Trang chủ
+                    li.breadcrumb-item
+                        a(href="/products") Sản phẩm
+                    li.breadcrumb-item
+                        a(href="/category/smartphones") Điện thoại
+                    li.breadcrumb-item.active(aria-current="page") iPhone 15 Pro Max
 
+    // Product Detail Section
+    .container.my-5
         .row
-            .col-6(class="d-flex flex-column justify-content-start align-items-center")
-                img(src=product.thumbnail alt=product.title class=" img-fluid")
-                .image-gallery.mt-3
-                    each image in product.images
-                        img(src=image alt="Product Image" style="width: 100px; margin-right: 5px")
+            // Product Gallery
+            .col-lg-6.col-md-12.mb-4
+                .product-gallery
+                    // Main Image
+                    .main-image.mb-3
+                        img#mainProductImage.img-fluid.rounded.shadow(
+                            src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=600&h=600&fit=crop" 
+                            alt="iPhone 15 Pro Max"
+                            style="width: 100%; height: 500px; object-fit: cover;"
+                        )
+                        //- .image-badges
+                        //-     .badge.bg-danger.position-absolute(style="top: 10px; left: 10px;") -20%
+                        //-     .badge.bg-success.position-absolute(style="top: 10px; right: 10px;") Mới
 
-            .col-6
-                h2 #{product.title}
-                p.text-muted #{product.category}
-                p !{product.description}
+                    // Thumbnail Images
+                    .thumbnail-images
+                        .row.g-2
+                            .col-3
+                                img.img-thumbnail.thumbnail-item.active(
+                                    src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=150&h=150&fit=crop"
+                                    alt="View 1"
+                                    onclick="changeMainImage(this.src)"
+                                )
+                            .col-3
+                                img.img-thumbnail.thumbnail-item(
+                                    src="https://images.unsplash.com/photo-1605236453806-b25e484c9b29?w=150&h=150&fit=crop"
+                                    alt="View 2"
+                                    onclick="changeMainImage(this.src)"
+                                )
+                            .col-3
+                                img.img-thumbnail.thumbnail-item(
+                                    src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=150&h=150&fit=crop"
+                                    alt="View 3"
+                                    onclick="changeMainImage(this.src)"
+                                )
+                            .col-3
+                                img.img-thumbnail.thumbnail-item(
+                                    src="https://images.unsplash.com/photo-1607936851397-4d9d924503db?w=150&h=150&fit=crop"
+                                    alt="View 4"
+                                    onclick="changeMainImage(this.src)"
+                                )
 
-                p
-                    strong Price: $
-                    | #{product.price.toFixed(2)}
-                    if product.discountPercentage
-                        span.text-success &nbsp;(-#{product.discountPercentage}% Off)
+            // Product Information
+            .col-lg-6.col-md-12
+                .product-info
+                    // Product Title & Rating
+                    h1.product-title.mb-2 iPhone 15 Pro Max 256GB
+                    .product-rating.mb-3
+                        .stars.d-inline-block
+                            i.fas.fa-star.text-warning
+                            i.fas.fa-star.text-warning
+                            i.fas.fa-star.text-warning
+                            i.fas.fa-star.text-warning
+                            i.fas.fa-star-half-alt.text-warning
+                        span.rating-text.ms-2 4.5/5 (128 đánh giá)
+                        a.ms-3(href="#reviews") Xem tất cả đánh giá
 
-                p
-                    strong Rating:
-                    | #{" "} #{product.rating} / 5
+                    // Price Section
+                    .price-section.mb-4
+                        .price-current.h2.text-danger.fw-bold 24.990.000₫
+                        .price-original.text-decoration-line-through.text-muted.me-2 31.990.000₫
+                        .discount-percent.badge.bg-danger(style="left: -80px;") -22%
 
-                p
-                    strong Availability:
-                    span.text-primary &nbsp; #{" "} #{product.availabilityStatus}
+                    // Product Variants
+                    .product-variants.mb-4
+                        // Color Options
+                        .variant-group.mb-3
+                            label.form-label.fw-bold Màu sắc:
+                            .color-options.d-flex.gap-2.mt-2
+                                .color-option.active(data-color="Natural Titanium")
+                                    .color-circle(style="background: linear-gradient(135deg, #f5f5dc, #e6e6e6);")
+                                    span Natural Titanium
+                                .color-option(data-color="Blue Titanium")
+                                    .color-circle(style="background: linear-gradient(135deg, #4682b4, #1e3a8a);")
+                                    span Blue Titanium
+                                .color-option(data-color="White Titanium")
+                                    .color-circle(style="background: linear-gradient(135deg, #ffffff, #f8f9fa);")
+                                    span White Titanium
+                                .color-option(data-color="Black Titanium")
+                                    .color-circle(style="background: linear-gradient(135deg, #2c2c2c, #000000);")
+                                    span Black Titanium
 
-                p
-                    strong SKU:
-                    | #{" "} #{product.sku}
-                p
-                    strong Barcode:
-                    | #{product.meta.barcode}
-                p
-                    strong QR Code:
-                    br
-                    img(src=product.meta.qrCode alt="QR Code" width="100")
+                        // Storage Options
+                        .variant-group.mb-3
+                            label.form-label.fw-bold Dung lượng:
+                            .storage-options.d-flex.gap-2.mt-2
+                                .storage-option(data-storage="128GB") 128GB
+                                .storage-option.active(data-storage="256GB") 256GB
+                                .storage-option(data-storage="512GB") 512GB
+                                .storage-option(data-storage="1TB") 1TB
 
-                p
-                    strong Warranty:
-                    | #{" "} #{product.warrantyInformation}
-                p
-                    strong Shipping Info:
-                    | #{" "} #{product.shippingInformation}
-                p
-                    strong Return Policy:
-                    | #{" "} #{product.returnPolicy}
-                p
-                    strong Minimum Order Quantity:
-                    | #{" "} #{product.minimumOrderQuantity}
+                    // Quantity & Add to Cart
+                    .purchase-section.mb-4
+                        .quantity-selector.mb-3
+                            label.form-label.fw-bold Số lượng:
+                            .input-group.quantity-input(style="width: 150px;")
+                                button.btn.btn-outline-secondary.btn-minus(type="button") -
+                                input.form-control.text-center(type="number" value="1" min="1" max="10")
+                                button.btn.btn-outline-secondary.btn-plus(type="button") +
 
-                p
-                    strong Dimensions:
-                    ul
-                        li Width: #{" "} #{product.dimensions.width} cm
-                        li Height: #{" "} #{product.dimensions.height} cm
-                        li Depth: #{" "} #{product.dimensions.depth} cm
+                        .action-buttons.d-grid.gap-2
+                            button.btn.btn-danger.btn-lg.add-to-cart(type="button")
+                                i.fas.fa-shopping-cart.me-2
+                                | Thêm vào giỏ hàng
+                            button.btn.btn-outline-danger.btn-lg.buy-now(type="button")
+                                i.fas.fa-bolt.me-2
+                                | Mua ngay
 
-                p
-                    strong Weight:
-                    | #{" "} #{product.weight} kg
+                    // Product Features
+                    .product-features.mb-4
+                        h5.mb-3 Đặc điểm nổi bật:
+                        .row
+                            .col-6.mb-2
+                                .feature-item
+                                    i.fas.fa-mobile-alt.text-primary.me-2
+                                    span Màn hình 6.7" Super Retina XDR
+                            .col-6.mb-2
+                                .feature-item
+                                    i.fas.fa-microchip.text-primary.me-2
+                                    span Chip A17 Pro
+                            .col-6.mb-2
+                                .feature-item
+                                    i.fas.fa-camera.text-primary.me-2
+                                    span Camera 48MP Pro
+                            .col-6.mb-2
+                                .feature-item
+                                    i.fas.fa-battery-full.text-primary.me-2
+                                    span Pin 29 giờ video
 
-                p
-                    strong Status:
-                    | #{" "} #{product.status == 'active' ? 'Active' : 'Inactive'}
-                p
-                    strong Position:
-                    | #{" "} #{product.position}
+                    // Trust Badges
+                    .trust-badges.border-top.pt-3
+                        .row.text-center
+                            .col-3
+                                i.fas.fa-shipping-fast.text-success.fs-4
+                                small.d-block.mt-1 Giao hàng miễn phí
+                            .col-3
+                                i.fas.fa-undo.text-info.fs-4
+                                small.d-block.mt-1 Đổi trả 7 ngày
+                            .col-3
+                                i.fas.fa-shield-alt.text-warning.fs-4
+                                small.d-block.mt-1 Bảo hành 12 tháng
+                            .col-3
+                                i.fas.fa-headset.text-primary.fs-4
+                                small.d-block.mt-1 Hỗ trợ 24/7
 
-                p
-                    small Created At: #{product.meta.createdAt.toLocaleString()}
-                    br
-                    small Last Updated: #{product.meta.updatedAt.toLocaleString()}
+    // Product Details Tabs
+    .container.my-5
+        .row
+            .col-12
+                .product-tabs
+                    // Tab Navigation
+                    ul.nav.nav-tabs.nav-fill(role="tablist")
+                        li.nav-item(role="presentation")
+                            button.nav-link.active(data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab") 
+                                | Mô tả sản phẩm
+                        li.nav-item(role="presentation")
+                            button.nav-link(data-bs-toggle="tab" data-bs-target="#specifications" type="button" role="tab") 
+                                | Thông số kỹ thuật
+                        li.nav-item(role="presentation")
+                            button.nav-link(data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab") 
+                                | Đánh giá (128)
+                        li.nav-item(role="presentation")
+                            button.nav-link(data-bs-toggle="tab" data-bs-target="#shipping" type="button" role="tab") 
+                                | Vận chuyển
 
-        hr
+                    // Tab Content
+                    .tab-content.mt-4
+                        // Description Tab
+                        .tab-pane.fade.show.active(id="description" role="tabpanel")
+                            .row
+                                .col-lg-8
+                                    h4.mb-3 Mô tả sản phẩm
+                                    p iPhone 15 Pro Max là đỉnh cao của công nghệ di động, mang đến trải nghiệm hoàn toàn mới với chip A17 Pro tiên tiến nhất từ trước đến nay.
 
-        h3.mt-5 Reviews
-        if product.reviews.length
-            each review in product.reviews
-                .card.mb-3
-                    .card-body
-                        h5.card-title #{review.reviewerName} (#{review.rating}/5)
-                        h6.card-subtitle.text-muted #{review.reviewerEmail}
-                        p.card-text.mt-2 #{review.comment}
-                        small.text-muted Date: #{review.date.toLocaleString()}
-        else
-            p.text-muted No reviews yet.
+                                    h5.mt-4 Thiết kế Titanium đẳng cấp
+                                    p Được chế tác từ titanium hàng không vũ trụ, iPhone 15 Pro Max vừa nhẹ vừa bền bỉ, mang lại cảm giác cao cấp trong từng chi tiết.
+
+                                    h5.mt-4 Camera Pro tiên tiến
+                                    ul
+                                        li Hệ thống camera Pro 48MP với khả năng zoom quang học 5x
+                                        li Chế độ Action Mode cho video siêu mượt
+                                        li Chụp ảnh macro và Portrait cải tiến
+                                        li Quay video ProRes và Log
+
+                                .col-lg-4
+                                    img.img-fluid.rounded(src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=300&fit=crop")
+
+                        // Specifications Tab
+                        .tab-pane.fade(id="specifications" role="tabpanel")
+                            h4.mb-4 Thông số kỹ thuật
+                            .row
+                                .col-lg-6
+                                    table.table.table-striped
+                                        tbody
+                                            tr
+                                                td.fw-bold Màn hình
+                                                td 6.7" Super Retina XDR OLED
+                                            tr
+                                                td.fw-bold Độ phân giải
+                                                td 2796 x 1290 pixels
+                                            tr
+                                                td.fw-bold Chip xử lý
+                                                td A17 Pro
+                                            tr
+                                                td.fw-bold RAM
+                                                td 8GB
+                                            tr
+                                                td.fw-bold Bộ nhớ trong
+                                                td 256GB
+                                .col-lg-6
+                                    table.table.table-striped
+                                        tbody
+                                            tr
+                                                td.fw-bold Camera chính
+                                                td 48MP
+                                            tr
+                                                td.fw-bold Camera phụ
+                                                td 12MP Ultra Wide + 12MP Telephoto
+                                            tr
+                                                td.fw-bold Pin
+                                                td 4441 mAh
+                                            tr
+                                                td.fw-bold Hệ điều hành
+                                                td iOS 17
+                                            tr
+                                                td.fw-bold Trọng lượng
+                                                td 221g
+
+                        // Reviews Tab
+                        .tab-pane.fade(id="reviews" role="tabpanel")
+                            .row
+                                .col-lg-8
+                                    h4.mb-4 Đánh giá từ khách hàng
+
+                                    if product.reviews && product.reviews.length > 0
+                                        // Review Summary
+                                        - const avgRating = product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length
+                                        - const ratingCount = [0, 0, 0, 0, 0]
+                                        - product.reviews.forEach(review => ratingCount[review.rating - 1]++)
+                                        - const ratingPercentages = ratingCount.map(count => (count / product.reviews.length * 100).toFixed(0))
+
+                                        .review-summary.bg-light.p-4.rounded.mb-4
+                                            .row.align-items-center
+                                                .col-md-4.text-center
+                                                    .rating-large.mb-2
+                                                        span.display-4.fw-bold #{avgRating.toFixed(1)}
+                                                        span.text-muted /5
+                                                    .stars.fs-5
+                                                        - for(let i = 1; i <= 5; i++)
+                                                            if i <= Math.floor(avgRating)
+                                                                i.fas.fa-star.text-warning
+                                                            else if i === Math.ceil(avgRating) && avgRating % 1 !== 0
+                                                                i.fas.fa-star-half-alt.text-warning
+                                                            else
+                                                                i.far.fa-star.text-muted
+                                                    small.text-muted #{product.reviews.length} đánh giá
+                                                .col-md-8
+                                                    .rating-breakdown
+                                                        each percentage, index in ratingPercentages.reverse()
+                                                            .rating-bar.d-flex.align-items-center.mb-2
+                                                                span.me-2 #{5-index}★
+                                                                .progress.flex-fill.me-2(style="height: 8px;")
+                                                                    .progress-bar(style=`width: ${percentage}%`)
+                                                                small #{percentage}%
+
+                                        // Individual Reviews
+                                        .reviews-list
+                                            each review in product.reviews
+                                                .review-item.border-bottom.py-3
+                                                    .d-flex.justify-content-between.align-items-start.mb-2
+                                                        h6.mb-0 #{review.user_name || 'Người dùng ẩn danh'}
+                                                        small.text-muted #{new Date(review.createdAt).toLocaleDateString('vi-VN')}
+                                                    .stars.mb-2
+                                                        - for(let i = 1; i <= 5; i++)
+                                                            if i <= review.rating
+                                                                i.fas.fa-star.text-warning
+                                                            else
+                                                                i.far.fa-star.text-muted
+                                                    p.mb-0 #{review.comment}
+                                    else
+                                        .text-center.py-5
+                                            i.fas.fa-comment-slash.fa-3x.text-muted.mb-3
+                                            h5.text-muted Chưa có đánh giá nào
+                                            p.text-muted Hãy là người đầu tiên đánh giá sản phẩm này!
+
+                                .col-lg-4
+                                    .write-review.bg-light.p-4.rounded
+                                        h5.mb-3 Viết đánh giá
+                                        form#reviewForm
+                                            input(type="hidden" name="product_id" value=product._id)
+                                            .mb-3
+                                                label.form-label Đánh giá của bạn
+                                                .rating-input.d-flex.gap-1
+                                                    - for(let i = 1; i <= 5; i++)
+                                                        i.far.fa-star.rating-star(data-rating=i)
+                                            .mb-3
+                                                label.form-label Nhận xét
+                                                textarea.form-control(name="comment" rows="4" placeholder="Chia sẻ trải nghiệm của bạn..." required)
+                                            button.btn.btn-primary(type="submit") Gửi đánh giá
+
+                        // Shipping Tab
+                        .tab-pane.fade(id="shipping" role="tabpanel")
+                            h4.mb-4 Thông tin vận chuyển
+                            .row
+                                .col-lg-6
+                                    .shipping-info
+                                        h5 Phương thức vận chuyển
+                                        .shipping-method.border.p-3.rounded.mb-3
+                                            .d-flex.justify-content-between.align-items-center
+                                                div
+                                                    strong Giao hàng tiêu chuẩn
+                                                    br
+                                                    small.text-muted 3-5 ngày làm việc
+                                                .text-success.fw-bold Miễn phí
+                                        .shipping-method.border.p-3.rounded.mb-3
+                                            .d-flex.justify-content-between.align-items-center
+                                                div
+                                                    strong Giao hàng nhanh
+                                                    br
+                                                    small.text-muted 1-2 ngày làm việc
+                                                .fw-bold 50.000₫
+                                        .shipping-method.border.p-3.rounded
+                                            .d-flex.justify-content-between.align-items-center
+                                                div
+                                                    strong Giao hàng trong ngày
+                                                    br
+                                                    small.text-muted Đặt trước 14h
+                                                .fw-bold 100.000₫
+                                .col-lg-6
+                                    h5 Chính sách đổi trả
+                                    ul.list-unstyled
+                                        li.mb-2
+                                            i.fas.fa-check.text-success.me-2
+                                            | Đổi trả miễn phí trong 7 ngày
+                                        li.mb-2
+                                            i.fas.fa-check.text-success.me-2
+                                            | Sản phẩm chưa sử dụng, nguyên seal
+                                        li.mb-2
+                                            i.fas.fa-check.text-success.me-2
+                                            | Hoàn tiền 100% nếu lỗi từ nhà sản xuất
+                                        li.mb-2
+                                            i.fas.fa-check.text-success.me-2
+                                            | Bảo hành chính hãng 12 tháng
+
+    // Related Products
+    .container.my-5
+        .row
+            .col-12
+                h3.mb-4 Sản phẩm liên quan
+                .row
+                    each product in [{name: 'iPhone 15 Pro', price: '22.990.000₫', originalPrice: '27.990.000₫', image: 'https://images.unsplash.com/photo-1605236453806-b25e484c9b29?w=300&h=300&fit=crop'}, {name: 'iPhone 15', price: '19.990.000₫', originalPrice: '22.990.000₫', image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=300&h=300&fit=crop'}, {name: 'iPhone 14 Pro Max', price: '21.990.000₫', originalPrice: '29.990.000₫', image: 'https://images.unsplash.com/photo-1607936851397-4d9d924503db?w=300&h=300&fit=crop'}, {name: 'iPhone 14 Pro', price: '18.990.000₫', originalPrice: '24.990.000₫', image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300&h=300&fit=crop'}]
+                        .col-lg-3.col-md-6.mb-4
+                            .card.product-card.h-100(style="width: 300px; object-fit: cover;")
+                                .position-relative
+                                    img.card-img-top(src=product.image alt=product.name style="height: 250px; object-fit: cover;")
+                                    .badge.bg-danger(style="top: 10px; right: 10px;width: 80px;") Sale
+
+                                .card-body.d-flex.flex-column
+                                    h6.card-title #{product.name}
+                                    .price-section.mt-auto
+                                        .text-danger.fw-bold #{product.price}
+                                        small.text-decoration-line-through.text-muted #{product.originalPrice}
+                                    .d-grid.mt-2
+                                        button.btn.btn-outline-primary.btn-sm Xem chi tiết

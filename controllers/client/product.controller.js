@@ -1,7 +1,7 @@
 const ProductCategory = require("../../models/product-category.model");
 const Product = require("../../models/product.model");
 
-const { priceNewProduct } = require('../../helper/products.js');
+const { priceNewProduct, getPriceNew } = require('../../helper/products.js');
 const { getSubCategories } = require('../../helper/product-category.js');
 
 // [GET] /products
@@ -15,14 +15,7 @@ module.exports.index = async (req, res) => {
             .populate('product_category_id', 'title')
             .sort({ position: "desc" });
 
-        // products.forEach(item => {
-        //     item.priceNew = (item.price - (item.price * item.discountPercentage) / 100).toFixed(2); 
-        // });
-
-        const newProducts = products.map(item => {
-            item.priceNew = (item.price - (item.price * item.discountPercentage) / 100).toFixed(2);
-            return item;
-        });
+        const newProducts = priceNewProduct(products);
 
         res.render("client/pages/products/index.pug", {
             pageTitle: "Products",
@@ -40,16 +33,23 @@ module.exports.index = async (req, res) => {
 module.exports.detail = async (req, res) => {
     const slug = req.params.slug;
     try {
-        const product = await Product.findOne({ slug: slug, deleted: false, status: "active" });
+        const product = await Product
+            .findOne({ slug: slug, deleted: false, status: "active" })
+            .populate('product_category_id', 'title')
+            .sort({ position: "desc" });
+
         if (!product) {
             return res.status(404).send("Product not found");
         }
-        product.priceNew = (product.price - (product.price * product.discountPercentage) / 100).toFixed(2);
+
+        product.priceNew = getPriceNew(product.price, product.discountPercentage);
+
         res.render("client/pages/products/detail.pug", {
             pageTitle: product.title,
             description: product.description || "Product details",
             product: product,
         });
+
     } catch (err) {
         console.error("Error fetching product details:", err);
         res.status(500).send("Internal Server Error");
@@ -80,11 +80,13 @@ module.exports.category = async (req, res) => {
             .find({ product_category_id: { $in: categoryIds }, deleted: false })
             .populate('product_category_id', 'title').sort({ createdAt: 'desc' });
 
+        const newProducts = priceNewProduct(products);
+
         // Render view
         res.render("client/pages/products/category.pug", {
             pageTitle: `Products in ${parentCategory.title}`,
             description: "Welcome to our products page!",
-            products,
+            products: newProducts,
             category: parentCategory
         });
 

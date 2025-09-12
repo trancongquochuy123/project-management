@@ -7,7 +7,17 @@ Header.header
                 .inner-logo
                     a(href='/')
                         img(src='/images/logo.jpg' alt='Logo' class='logo')
-            .col-9
+
+            .col-3  
+                .inner-search
+                    form(
+                        action='/search' 
+                        method='GET' 
+                        class='form-search d-flex')
+                        input(type='text' name='keyword' placeholder='Search products...' value=(typeof keyword !== 'undefined' ? keyword : '') class='form-control')
+                        button(type='submit' class='btn btn-search')
+                            i.fa.fa-search
+            .col-6
                 .inner-menu 
                     ul.menu
                         li.sub-menu
