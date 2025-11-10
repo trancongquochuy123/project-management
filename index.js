@@ -41,6 +41,7 @@ app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce
 
 // Body Parser
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.set('views', `${__dirname}/views`);
 app.set('view engine', 'pug');

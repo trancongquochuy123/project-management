@@ -2052,3 +2052,33 @@ html {
 
 
 /* End trang detail san pham */
+
+/* Alert */
+
+/* Alert */
+.alert {
+    position: fixed;
+    min-width: 300px;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 15px 40px 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.alert-hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.close-alert {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #000;
+}
+/* End Alert */

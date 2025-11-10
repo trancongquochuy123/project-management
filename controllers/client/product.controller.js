@@ -35,7 +35,7 @@ module.exports.detail = async (req, res) => {
     try {
         const product = await Product
             .findOne({ slug: slug, deleted: false, status: "active" })
-            .populate('product_category_id', 'title')
+            .populate('product_category_id', 'title slug')
             .sort({ position: "desc" });
 
         if (!product) {
@@ -61,7 +61,6 @@ module.exports.detail = async (req, res) => {
 // [GET] /products/:slugCategory
 module.exports.category = async (req, res) => {
     const slugCategory = req.params.slugCategory;
-    console.log("slugCategory", slugCategory);
 
     try {
         // Lấy category cha
