@@ -1,4 +1,5 @@
 include ../mixins/sub-menu.pug
+include ../mixins/mini-cart.pug
 
 Header.header 
     .container 
@@ -21,8 +22,14 @@ Header.header
                 .inner-menu 
                     ul.menu
                         li.sub-menu
-                            a(href='/') Home
+                            a(href='/')
+                                i(style="margin-right:4px").fas.fa-home
+                                span Home
                         li.sub-menu
                             - const pathProduct = '/products';
-                            a(href=pathProduct) Sản phẩm
+                            a(href=pathProduct) 
+                                i(style="margin-right:4px").fas.fa-boxes
+                                span Sản phẩm
                             +sub-menu(layoutProductCategories, pathProduct)
+                        li.sub-menu
+                            +mini-cart(miniCart)

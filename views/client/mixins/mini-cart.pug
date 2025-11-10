@@ -1,0 +1,47 @@
+mixin mini-cart(cart)
+    .cart-wrapper
+        // Icon giỏ hàng với badge
+        .cart-icon
+            i.fas.fa-shopping-cart
+            - const totalQuantity = cart && cart.products ? cart.products.reduce((sum, item) => sum + item.quantity, 0) : 0
+            if totalQuantity > 0
+                span.cart-count= totalQuantity
+            else
+                span.cart-count 0
+
+        // Dropdown hiển thị khi hover
+        .mini-cart-dropdown
+            if cart && cart.products && cart.products.length > 0
+                .dropdown-header
+                    h6.mb-0 Giỏ hàng của bạn
+                    span.item-count= `${cart.products.length} sản phẩm`
+                
+                ul.cart-items
+                    each item in cart.products
+                        - const product = item.product_id
+                        li.cart-item
+                            .item-image-wrapper
+                                img.item-image(
+                                    src=product.thumbnail || '/images/default-product.png'
+                                    alt=product.title || 'Sản phẩm'
+                                    onerror="this.src='/images/default-product.png'"
+                                )
+                            .item-details
+                                .item-name(title=product.title)= product.title || 'Tên sản phẩm'
+                                .item-info
+                                    span.item-quantity SL: #{item.quantity}
+                                    span.item-price= (product.price * item.quantity).toLocaleString('vi-VN') + '₫'
+                
+                .cart-footer
+                    .cart-total
+                        span Tổng cộng:
+                        span.total-amount
+                            = cart.products.reduce((total, item) => total + (item.product_id.price * item.quantity), 0).toLocaleString('vi-VN') + '₫'
+                    .cart-actions
+                        a.btn.btn-outline-primary.btn-sm(href='/cart') Xem giỏ hàng
+                        a.btn.btn-danger.btn-sm(href='/checkout') Thanh toán
+            else
+                .empty-cart
+                    i.fas.fa-shopping-cart.empty-icon
+                    p.empty-text Giỏ hàng trống
+                    a.btn.btn-primary.btn-sm(href='/products') Mua sắm ngay

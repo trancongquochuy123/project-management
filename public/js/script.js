@@ -159,3 +159,5 @@ function initializeProductDetail() {
 //  🧠 CHẠY KHI DOM SẴN SÀNG
 // =============================
 document.addEventListener('DOMContentLoaded', initializeProductDetail);
+
+
