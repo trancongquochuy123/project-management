@@ -9,20 +9,22 @@ const cartMiddleware = require('../../middlewares/client/cart.middleware.js');
 const userMiddleware = require('../../middlewares/client/user.middleware.js');
 
 module.exports = (app) => {
+    // Middleware chung cho tất cả routes
     app.use(categoryMiddleware.category);
     app.use(cartMiddleware.cartId);
+    
+    // Middleware lấy thông tin user nếu có (không bắt buộc login)
+    // Dùng cho các trang như home, products để hiển thị tên user nếu đã login
     app.use(userMiddleware.infoUser);
 
     app.use('/', homeRoutes);
-
     app.use('/products', productRoutes);
-
     app.use('/search', searchRoutes);
-
     app.use('/cart', cartRoutes);
-
-    app.use('/checkout', checkoutRoutes);
-
-    app.use('/user', userRoutes);
     
+    // Checkout cần đăng nhập -> thêm requireAuth vào từng route trong checkout.route.js
+    app.use('/checkout', checkoutRoutes);
+    
+    // User routes đã có middleware riêng trong user.route.js
+    app.use('/user', userRoutes);
 }

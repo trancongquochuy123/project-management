@@ -30,3 +30,29 @@ module.exports.registerPost = (req, res, next) => {
 
     next();
 } 
+
+module.exports.forgotPasswordPost = (req, res, next) => {
+    if (!req.body.email) {
+        req.flash('error', 'Email is required!');
+        return res.redirect(req.get('referer') || `${systemConfig.prefixAdmin}/user/password/forgot`);
+    }
+
+    next();
+}
+
+module.exports.otpPasswordPost = (req, res, next) => {
+    if (!req.body.email) {
+        req.flash('error', 'Email is required!');
+        return res.redirect(req.get('referer') || `${systemConfig.prefixAdmin}/user/password/otp`);
+    }
+
+    next();
+}   
+module.exports.resetPasswordPost = (req, res, next) => {
+    if (!req.body.email) {
+        req.flash('error', 'Email is required!');
+        return res.redirect(req.get('referer') || `${systemConfig.prefixAdmin}/user/password/reset`);
+    }
+
+    next();
+}   
