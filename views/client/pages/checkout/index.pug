@@ -1,0 +1,188 @@
+extends ../../layouts/default.pug
+
+block main
+    .cart-page.py-5
+        .container-xl
+            if cart && cart.products && cart.products.length > 0
+                .row
+                    .col-12
+                        h2.page-title.mb-4
+                            i.fas.fa-shopping-cart.me-2
+                            | Đặt hàng
+
+                .row
+                    // Danh sách sản phẩm
+                    .col-lg-8.mb-4
+                        .cart-items-wrapper
+                            each item, index in cart.products
+                                - const product = item.product_id
+                                - const itemTotal = product.price * item.quantity
+                                - const discount = product.discountPercentage || 0
+                                - const discountedPrice = product.price * (1 - discount / 100)
+                                - const finalTotal = discountedPrice * item.quantity
+
+                                .cart-item.card.mb-3(data-product-id=product._id)
+                                    .card-body
+                                        .row.align-items-center
+                                            // Hình ảnh sản phẩm
+                                            .col-md-2.col-3.mb-3.mb-md-0
+                                                .product-image-wrapper
+                                                    a(href=`/products/detail/${product.slug}`)
+                                                        img.product-image(
+                                                            src=product.thumbnail || '/images/default-product.png'
+                                                            alt=product.title
+                                                            onerror="this.src='/images/default-product.png'"
+                                                        )
+
+                                            // Thông tin sản phẩm
+                                            .col-md-2.col-2.mb-6
+                                                h5.product-title
+                                                    a(href=`/products/detail/${product.slug}`)= product.title
+                                                if product.discountPercentage > 0
+                                                    .product-discount
+                                                        span.badge.bg-danger
+                                                            i.fas.fa-tag.me-1
+                                                            | Giảm #{product.discountPercentage}%
+                                                .product-stock.mt-2
+                                                    if product.stock > 0
+                                                        span.text-success
+                                                            i.fas.fa-check-circle.me-1
+                                                            | Còn hàng (#{product.stock})
+                                                    else
+                                                        span.text-danger
+                                                            i.fas.fa-times-circle.me-1
+                                                            | Hết hàng
+
+                                            // Giá
+                                            .col-md-3.col-6.mb-3.mb-md-0.text-left
+                                                if discount > 0
+                                                    .price-wrapper
+                                                        .original-price.text-muted.text-decoration-line-through
+                                                            = product.price.toLocaleString('vi-VN') + '₫'
+                                                        .discounted-price.text-danger.fw-bold.fs-5
+                                                            = discountedPrice.toLocaleString('vi-VN') + '₫'
+                                                else
+                                                    .current-price.text-danger.fw-bold.fs-5
+                                                        = product.price.toLocaleString('vi-VN') + '₫'
+
+                                            // Số lượng
+                                            .col-md-1.col-6.mb-3.mb-md-0
+                                                .quantity-controls.d-flex.justify-content-center.align-items-center
+                                                    span.form-control.form-control-sm.text-center.quantity-input(
+                                                        data-product-id=product._id
+                                                        )= item.quantity
+
+
+                                            // Tổng tiền
+                                            .col-md-4.col-12.text-md-end.text-center
+                                                .item-total.mb-2
+                                                    .total-label.small.text-muted Thành tiền:
+                                                    .total-price.text-danger.fw-bold.fs-5
+                                                        = finalTotal.toLocaleString('vi-VN') + '₫'
+
+                    // Tổng kết đơn hàng
+                    .col-lg-4
+                        .order-summary.card.sticky-top(style="top: 20px;")
+                            .card-header.bg-primary.text-white
+                                h5.mb-0
+                                    i.fas.fa-receipt.me-2
+                                    | Tóm tắt đơn hàng
+                            .card-body
+                                // Tính toán
+                                - let subtotal = 0
+                                - let totalDiscount = 0
+                                each item in cart.products
+                                    - const product = item.product_id
+                                    - const discount = product.discountPercentage || 0
+                                    - const itemPrice = product.price * item.quantity
+                                    - const discountAmount = itemPrice * (discount / 100)
+                                    - subtotal += itemPrice
+                                    - totalDiscount += discountAmount
+                                - const total = subtotal - totalDiscount
+
+                                .summary-row.d-flex.justify-content-between.mb-3
+                                    span.text-muted Tạm tính:
+                                    span.fw-semibold= subtotal.toLocaleString('vi-VN') + '₫'
+
+                                if totalDiscount > 0
+                                    .summary-row.d-flex.justify-content-between.mb-3
+                                        span.text-muted Giảm giá:
+                                        span.text-success.fw-semibold
+                                            | -#{totalDiscount.toLocaleString('vi-VN')}₫
+
+                                .summary-row.d-flex.justify-content-between.mb-3
+                                    span.text-muted Phí vận chuyển:
+                                    span.text-success.fw-semibold Miễn phí
+
+                                hr
+
+                                .summary-row.d-flex.justify-content-between.mb-4
+                                    span.h5.mb-0 Tổng cộng:
+                                    span.h4.mb-0.text-danger.fw-bold= total.toLocaleString('vi-VN') + '₫'
+
+                .row
+                    .col-12.text-center.mt-4
+                        a.btn.btn-outline-danger(href='/cart/clear')
+                            i.fas.fa-trash.me-2
+                            | Xóa tất cả sản phẩm trong giỏ hàng
+
+                .row
+                    .col-12
+                        .card.p-4.my-4
+                            form(
+                                action="checkout/order"
+                                method="POST"
+                            )
+                                div(class="form-group mb-3")
+                                    label(for="fullName") Họ tên người nhận:
+                                    textarea.form-control(
+                                        id="fullName"
+                                        name="fullName"
+                                        rows="3"
+                                        placeholder="Nhập họ tên người nhận..."
+                                        required
+                                    )
+
+                                div(class="form-group mb-3")
+                                    label(for="address") Địa chỉ giao hàng:
+                                    textarea.form-control(
+                                        id="address"
+                                        name="address"
+                                        rows="3"
+                                        placeholder="Nhập địa chỉ giao hàng..."
+                                        required
+                                    )
+
+                                div(class="form-group mb-3")
+                                    label(for="phone") Số điện thoại liên hệ:
+                                    textarea.form-control(
+                                        id="phone"
+                                        name="phone"
+                                        rows="3"
+                                        placeholder="Nhập số điện thoại liên hệ..."
+                                        required
+                                    )
+
+                                div(class="form-group mb-3")
+                                    label(for="note") Ghi chú đơn hàng (nếu có):
+                                    textarea.form-control(
+                                        id="note"
+                                        name="note"
+                                        rows="3"
+                                        placeholder="Nhập ghi chú cho đơn hàng..."
+                                    )
+                                button.btn.btn-success.btn-lg.mt-3(type="submit")     
+                                    i.fas.fa-check.me-2
+                                    | Xác nhận đặt hàng
+
+            else
+                // Giỏ hàng trống
+                .empty-cart.text-center.py-5
+                    .empty-icon.mb-4
+                        i.fas.fa-shopping-cart.fa-5x.text-muted.opacity-25
+                    h3.mb-3 Giỏ hàng của bạn đang trống
+                    p.text-muted.mb-4 Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm
+                    a.btn.btn-primary.btn-lg(href='/products')
+                        i.fas.fa-shopping-bag.me-2
+                        | Khám phá sản phẩm
+

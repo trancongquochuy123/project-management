@@ -1,0 +1,65 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+    .container.my-5
+        .row.justify-content-center
+            .col-lg-8
+                .card.shadow.border-0
+                    .card-body.text-center.py-5
+                        i.fas.fa-check-circle.text-success.display-4.mb-3
+                        h3.text-success.font-weight-bold.mb-3 ĐẶT HÀNG THÀNH CÔNG!
+                        p.lead.mb-2 Cảm ơn bạn đã tin tưởng và mua sắm tại cửa hàng của chúng tôi.
+                        p.mb-3 Chúng tôi sẽ liên hệ và xác nhận đơn hàng trong thời gian sớm nhất.
+                        hr
+                        p.mb-1
+                            | Mã đơn hàng của bạn là 
+                            strong.text-primary #{order._id}
+
+        .row.justify-content-center.mt-4
+            .col-lg-8
+                .card.border-0.shadow-sm
+                    .card-header.bg-primary.text-white
+                        h5.mb-0 Thông tin đơn hàng
+                    ul.list-group.list-group-flush
+                        li.list-group-item
+                            strong Mã đơn hàng: 
+                            span.ms-1 #{order._id}
+
+                        li.list-group-item
+                            strong Ngày đặt hàng: 
+                            span.ms-1 #{new Date(order.createdAt).toLocaleString('vi-VN')}
+
+                        li.list-group-item
+                            strong Tổng tiền: 
+                            span.ms-1.text-danger #{order.totalPrice.toLocaleString('vi-VN')} ₫
+
+                        li.list-group-item
+                            strong Phương thức thanh toán:
+                            span.ms-1 #{order.method}
+                        li.list-group-item
+                            strong Ghi chú:
+                            span.ms-1 #{order.userInfo.note || 'Không có ghi chú'}
+
+        // ===== Danh sách sản phẩm =====
+        .row.justify-content-center.mt-4
+            .col-lg-8
+                .card.shadow-sm.border-0
+                    .card-header.bg-dark.text-white
+                        h5.mb-0 Danh sách sản phẩm
+                    .list-group.list-group-flush
+                        each item in order.products
+                            li.list-group-item.d-flex.align-items-center
+                                img(src=item.product_id.thumbnail, alt=item.product_id.title, width="60" height="60" class="rounded me-3" style="object-fit:cover")
+                                .flex-grow-1
+                                    strong #{item.product_id.title}
+                                    br
+                                    small.text-muted Số lượng: #{item.quantity}
+                                .text-end
+                                    span.text-danger #{(item.price * item.quantity).toLocaleString('vi-VN')} ₫
+
+        .row.justify-content-center.mt-4
+            .col-lg-8.text-center
+                a.btn.btn-lg.btn-outline-primary(href="/")
+                    i.fas.fa-home.me-2
+                    | Về trang chủ

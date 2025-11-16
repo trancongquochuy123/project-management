@@ -8,6 +8,7 @@ const orderSchema = new mongoose.Schema(
             fullName: { type: String, required: true },
             phone: { type: String, required: true },
             address: { type: String, required: true },
+            note: { type: String }
         },
         products: [
             {
@@ -17,6 +18,8 @@ const orderSchema = new mongoose.Schema(
                 quantity: { type: Number, required: true },
             }
         ],
+        method: { type: String, enum: ['cod', 'online'], default: 'cod' },
+        status: { type: String, enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
         deleted: { type: Boolean, default: false },
         deletedAt: { type: Date },
     },
