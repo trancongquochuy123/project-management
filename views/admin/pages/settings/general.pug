@@ -1,0 +1,66 @@
+extends ../../layout/default.pug
+include ../../mixins/alert.pug
+
+block main 
+    h1 General Settings
+    +alert-success(5000)
+    +alert-error(5000)
+
+    form(
+        method="POST"
+            action=`${prefixAdmin}/settings/general` 
+            enctype="multipart/form-data")
+        .mb-3
+            label.form-label(for="websiteName") Website Name
+            input.form-control(
+                type="text" 
+                id="websiteName" 
+                name="websiteName" 
+                required 
+                value=(settingsGeneral ? settingsGeneral.websiteName : ''))
+
+        .mb-3
+            label.form-label(for="logo") Logo
+            input.form-control(
+                type="file" 
+                id="logo" 
+                name="logo" 
+                accept="image/*"
+                )
+            if settingsGeneral && settingsGeneral.logo
+                img.mt-2(src=`${settingsGeneral.logo}` alt="Logo" width="150")
+        .mb-3
+            label.form-label(for="phoneNumber") Phone Number
+            input.form-control(
+                type="text" 
+                id="phoneNumber" 
+                name="phoneNumber" 
+                value=(settingsGeneral ? settingsGeneral.phoneNumber : '')
+                )
+        .mb-3
+            label.form-label(for="address") Address
+            input.form-control(
+                type="text" 
+                id="address" 
+                name="address" 
+                value=(settingsGeneral ? settingsGeneral.address : '')
+                )
+
+        .mb-3
+            label.form-label(for="email") Email
+            input.form-control(
+                type="email" 
+                id="email" 
+                name="email" 
+                value=(settingsGeneral ? settingsGeneral.email : '')
+                )
+        .mb-3
+            label.form-label(for="copyright") Copyright
+            input.form-control(
+                type="text" 
+                id="copyright" 
+                name="copyright" 
+                value=(settingsGeneral ? settingsGeneral.copyright : '')
+                )
+
+        button.btn.btn-primary(type="submit") Save Changes

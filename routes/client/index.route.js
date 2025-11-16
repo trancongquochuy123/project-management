@@ -9,6 +9,7 @@ const cartMiddleware = require('../../middlewares/client/cart.middleware.js');
 const userMiddleware = require('../../middlewares/client/user.middleware.js');
 const validateRequest = require('../../middlewares/client/validateRequest.middleware.js');
 const cartRateLimit = require('../../middlewares/client/cartRateLimit.middleware.js');
+const settingsGeneralMiddleware = require('../../middlewares/admin/setting.middleware');
 
 module.exports = (app) => {
     // 1. Validate request trước
@@ -18,6 +19,7 @@ module.exports = (app) => {
     app.use(cartRateLimit.cartCreationLimit);
 
     // Middleware chung cho tất cả routes
+    app.use(settingsGeneralMiddleware.SettingGeneral);
     app.use(categoryMiddleware.category);
     app.use(cartMiddleware.cartId);
 

@@ -7,7 +7,10 @@ Header.header
             .col-3
                 .inner-logo
                     a(href='/')
-                        img(src='/images/logo.jpg' alt='Logo' class='logo')
+                        if settingsGeneral && settingsGeneral.logo
+                            img(src=`${settingsGeneral.logo}` alt='Logo' class='logo')
+                        else
+                            img(src='/images/logo.jpg' alt='Logo' class='logo')
 
             .col-3  
                 .inner-search

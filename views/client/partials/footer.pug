@@ -2,6 +2,9 @@ Footer.footer
     .container
     .row
         .col-md-12
-        p © 2023 Your Company Name. All rights reserved.
+            if settingsGeneral && settingsGeneral.copyright
+                p= settingsGeneral.copyright
+            else
+                p © 2023 Your Company Name. All rights reserved.
 
         
