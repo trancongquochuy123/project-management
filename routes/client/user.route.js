@@ -24,6 +24,10 @@ router.post('/password/reset', validate.resetPasswordPost, controller.resetPassw
 router.get('/logout', userMiddleware.requireAuth, controller.logout);
 
 // Thêm các routes cần đăng nhập khác (ví dụ)
+router.get('/info', userMiddleware.requireAuth, controller.info);
+router.post('/info', userMiddleware.requireAuth, controller.infoPost);
+
+// Thêm các routes cần đăng nhập khác (ví dụ)
 // router.get('/profile', userMiddleware.requireAuth, controller.profile);
 // router.get('/orders', userMiddleware.requireAuth, controller.orders);
 

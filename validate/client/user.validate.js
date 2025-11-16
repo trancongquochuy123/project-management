@@ -56,3 +56,12 @@ module.exports.resetPasswordPost = (req, res, next) => {
 
     next();
 }   
+
+
+module.exports.infoPost = (req, res, next) => {
+    if (!req.body.fullName) {
+        req.flash('error', 'Full Name is required!');
+        return res.redirect(req.get('referer') || `${systemConfig.prefixAdmin}/user/info`);
+    }
+    next();
+}

@@ -1,0 +1,60 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+    +alert-success(2000)
+    +alert-error(2000)
+
+    .container.my-4
+        .row
+            .col-12
+                +box-head("User Profile")
+
+        .row.justify-content-center
+            .col-lg-8
+                .card.shadow-sm
+                    .card-header.bg-primary.text-white
+                        h5.mb-0 User Details
+                    .card-body
+                        dl.row
+                            dt.col-sm-4 User ID
+                            dd.col-sm-8= user._id
+
+                            dt.col-sm-4 Full Name
+                            dd.col-sm-8= user.fullName
+
+                            dt.col-sm-4 Email
+                            dd.col-sm-8= user.email
+
+                            dt.col-sm-4 Phone Number
+                            dd.col-sm-8= user.phone || "Not provided"
+
+                            dt.col-sm-4 Created At
+                            dd.col-sm-8= user.createdAt ? user.createdAt.toLocaleString() : "-"
+
+                            dt.col-sm-4 Updated At
+                            dd.col-sm-8= user.updatedAt ? user.updatedAt.toLocaleString() : "-"
+
+        hr.my-4
+
+        .row.justify-content-center
+            .col-lg-6
+                .card.shadow-sm
+                    .card-header.bg-secondary.text-white
+                        h5.mb-0 Update Profile
+                    .card-body
+                        form(action='/user/info' method='POST')
+                            .mb-3
+                                label.form-label(for='name') Full Name
+                                input#name.form-control(type='text' name='name' required value=user.fullName)
+
+                            .mb-3
+                                label.form-label(for='email') Email
+                                input#email.form-control(type='email' name='email' required value=user.email)
+
+                            .mb-3
+                                label.form-label(for='phone') Phone Number
+                                input#phone.form-control(type='text' name='phone' value=user.phone)
+
+                            button.btn.btn-primary.w-100(type='submit') Save Changes

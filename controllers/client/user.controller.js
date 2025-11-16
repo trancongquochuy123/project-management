@@ -363,3 +363,37 @@ module.exports.resetPasswordPost = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
+
+// [GET] /info
+module.exports.info = async (req, res) => {
+    try {
+        const user = await User.findOne({ _id: req.user._id, deleted: false });
+        
+        console.log("Rendering user info for:", user);
+        res.render("client/pages/user/info.pug", {
+            pageTitle: "User Information",
+            description: "View and update your information",
+            user
+        });
+    } catch (err) {
+        console.error("Error rendering user info page:", err);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+// [POST] /info
+module.exports.infoPost = async (req, res) => {
+    try {
+        const user = req.user;
+        const { fullName, email, phone } = req.body;
+        await User.updateOne(
+            { _id: user._id, deleted: false },
+            { $set: { fullName, email, phone } }
+        );
+        req.flash('success', 'Information updated successfully!');
+        res.redirect('/user/info');
+    } catch (err) {
+        console.error("Error updating user info:", err);
+        res.status(500).send("Internal Server Error");
+    }
+};
