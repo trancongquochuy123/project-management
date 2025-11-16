@@ -33,3 +33,21 @@ Header.header
                             +sub-menu(layoutProductCategories, pathProduct)
                         li.sub-menu
                             +mini-cart(miniCart)
+                        if (!user)
+                            li.sub-menu
+                                a(href='/user/login')
+                                    i(style="margin-right:4px").fas.fa-sign-in-alt
+                                    span Login
+                            li.sub-menu
+                                a(href='/user/register')
+                                    i(style="margin-right:4px").fas.fa-user-plus
+                                    span Register
+                        else
+                            li.sub-menu
+                                a(href='/user/profile')
+                                    i(style="margin-right:4px").fas.fa-user
+                                    span= user.fullName
+                            li.sub-menu
+                                a(href='/user/logout')
+                                    i(style="margin-right:4px").fas.fa-sign-out-alt
+                                    span Logout

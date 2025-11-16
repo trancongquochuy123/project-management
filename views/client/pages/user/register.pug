@@ -1,0 +1,33 @@
+
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+include ../../mixins/alert.pug
+
+block main
+    +alert-success(2000)
+    +alert-error(2000)
+    .container.my-3
+        .row
+            .col-12
+                +box-head("Register New Account")
+
+        .row.justify-content-center
+            .col-lg-6
+                form(
+                    action='/user/register' 
+                    method='POST' 
+                    class='mt-4'
+                    )
+                    .mb-3
+                        label.form-label(for='fullName') Full Name
+                        input#fullName.form-control(type='text' name='fullName' required placeholder='Enter your full name')
+
+                    .mb-3
+                        label.form-label(for='email') Email
+                        input#email.form-control(type='email' name='email' required placeholder='Enter your email address')
+
+                    .mb-3
+                        label.form-label(for='password') Password
+                        input#password.form-control(type='password' name='password' required placeholder='Enter your password')
+
+                    button.btn.btn-primary(type='submit') Register
