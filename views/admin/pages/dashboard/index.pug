@@ -1,7 +1,666 @@
 extends ../../layout/default.pug
 
 block main 
-    h1 Dashboard
+    .dashboard-container
+        // Header Section
+        .dashboard-header
+            .welcome-section
+                h1.dashboard-title Dashboard Overview
+                p.welcome-text Xin chào, #{user.fullName}!
+                - const currentRole = Array.isArray(role) ? role[0] : role;
+                span.role-badge(
+                class= currentRole.title && typeof currentRole.title === 'string' ? `role-${currentRole.title.toLowerCase()}` : 'role-unknown'
+                ) #{currentRole.title || 'Unknown'}
+                        
+        // Statistics Cards
+        .stats-grid
+            // Products Card
+            .stat-card.card-primary
+                .stat-icon
+                    i.fas.fa-box
+                .stat-content
+                    .stat-number #{statistics.products.total}
+                    .stat-label Tổng Sản Phẩm
+                .stat-details
+                    .detail-item
+                        i.fas.fa-check-circle
+                        span #{statistics.products.active} Đang hoạt động
+                    .detail-item
+                        i.fas.fa-times-circle
+                        span #{statistics.products.inactive} Không hoạt động
+                    .detail-item.warning
+                        i.fas.fa-exclamation-triangle
+                        span #{statistics.products.outOfStock} Hết hàng
 
-    div Welcome, #{user.fullName}!
-    div Role, #{role}!
+            // Users Card
+            .stat-card.card-success
+                .stat-icon
+                    i.fas.fa-users
+                .stat-content
+                    .stat-number #{statistics.users.total}
+                    .stat-label Người Dùng
+                .stat-details
+                    .detail-item
+                        i.fas.fa-user-check
+                        span #{statistics.users.active} Đang hoạt động
+                    .detail-item.highlight
+                        i.fas.fa-user-plus
+                        span +#{statistics.newThisWeek.users} Tuần này
+
+            // Accounts Card
+            .stat-card.card-info
+                .stat-icon
+                    i.fas.fa-user-shield
+                .stat-content
+                    .stat-number #{statistics.accounts.total}
+                    .stat-label Tài Khoản Admin
+                .stat-details
+                    .detail-item
+                        i.fas.fa-shield-alt
+                        span #{statistics.accounts.active} Đang hoạt động
+
+            // Categories Card
+            .stat-card.card-warning
+                .stat-icon
+                    i.fas.fa-tags
+                .stat-content
+                    .stat-number #{statistics.categories.total}
+                    .stat-label Danh Mục
+                .stat-details
+                    .detail-item
+                        i.fas.fa-tag
+                        span #{statistics.categories.active} Đang hoạt động
+
+            // Revenue Card
+            .stat-card.card-revenue
+                .stat-icon
+                    i.fas.fa-dollar-sign
+                .stat-content
+                    .stat-number $#{statistics.revenue.total}
+                    .stat-label Giá Trị Kho (Sau Giảm)
+                .stat-details
+                    .detail-item
+                        i.fas.fa-chart-line
+                        span Gốc: $#{statistics.revenue.totalValue}
+
+            // New This Week Card
+            .stat-card.card-highlight
+                .stat-icon
+                    i.fas.fa-calendar-week
+                .stat-content
+                    .stat-number +#{statistics.newThisWeek.products + statistics.newThisWeek.users}
+                    .stat-label Mới Tuần Này
+                .stat-details
+                    .detail-item
+                        i.fas.fa-box
+                        span #{statistics.newThisWeek.products} Sản phẩm
+                    .detail-item
+                        i.fas.fa-users
+                        span #{statistics.newThisWeek.users} Người dùng
+
+        // Charts and Tables Section
+        .dashboard-content
+            .content-row
+                // Category Statistics
+                .content-card.half-width
+                    .card-header
+                        h3
+                            i.fas.fa-chart-pie
+                            | Thống Kê Theo Danh Mục
+                    .card-body
+                        if statistics.categoryStats && statistics.categoryStats.length > 0
+                            .category-list
+                                each category in statistics.categoryStats
+                                    .category-item
+                                        .category-info
+                                            .category-name #{category.name}
+                                            .category-stats
+                                                span.badge #{category.count} sản phẩm
+                                                span.badge.stock #{category.totalStock} trong kho
+                                        .category-bar
+                                            .category-bar-fill(style=`width: ${(category.count / statistics.products.total * 100).toFixed(1)}%`)
+                        else
+                            .empty-state
+                                i.fas.fa-inbox
+                                p Chưa có dữ liệu danh mục
+
+                // Low Stock Products
+                .content-card.half-width
+                    .card-header
+                        h3
+                            i.fas.fa-exclamation-triangle
+                            | Sản Phẩm Sắp Hết Hàng
+                    .card-body
+                        if statistics.lowStockProducts && statistics.lowStockProducts.length > 0
+                            .product-list
+                                each product in statistics.lowStockProducts
+                                    .product-item.low-stock
+                                        if product.thumbnail
+                                            img.product-thumb(src=product.thumbnail alt=product.title)
+                                        else
+                                            .product-thumb.no-image
+                                                i.fas.fa-image
+                                        .product-info
+                                            .product-name #{product.title}
+                                            .product-stock
+                                                i.fas.fa-box
+                                                span.stock-danger Còn #{product.stock}
+                        else
+                            .empty-state
+                                i.fas.fa-check-circle
+                                p Tất cả sản phẩm đều có đủ hàng
+
+            .content-row
+                // Featured Products
+                .content-card.half-width
+                    .card-header
+                        h3
+                            i.fas.fa-star
+                            | Sản Phẩm Nổi Bật
+                    .card-body
+                        if statistics.featuredProducts && statistics.featuredProducts.length > 0
+                            .product-grid
+                                each product in statistics.featuredProducts
+                                    .product-card
+                                        if product.thumbnail
+                                            img.product-image(src=product.thumbnail alt=product.title)
+                                        else
+                                            .product-image.no-image
+                                                i.fas.fa-image
+                                        .product-details
+                                            .product-title #{product.title}
+                                            .product-meta
+                                                .product-price $#{product.price}
+                                                if product.rating
+                                                    .product-rating
+                                                        i.fas.fa-star
+                                                        span #{product.rating}
+                                            .product-stock
+                                                i.fas.fa-box
+                                                span #{product.stock} trong kho
+                        else
+                            .empty-state
+                                i.fas.fa-star
+                                p Chưa có sản phẩm nổi bật
+
+                // Top Rated Products
+                .content-card.half-width
+                    .card-header
+                        h3
+                            i.fas.fa-trophy
+                            | Sản Phẩm Đánh Giá Cao
+                    .card-body
+                        if statistics.topRatedProducts && statistics.topRatedProducts.length > 0
+                            .product-grid
+                                each product in statistics.topRatedProducts
+                                    .product-card
+                                        if product.thumbnail
+                                            img.product-image(src=product.thumbnail alt=product.title)
+                                        else
+                                            .product-image.no-image
+                                                i.fas.fa-image
+                                        .product-details
+                                            .product-title #{product.title}
+                                            .product-meta
+                                                .product-price $#{product.price}
+                                                if product.rating
+                                                    .product-rating.highlight
+                                                        i.fas.fa-star
+                                                        span #{product.rating}
+                        else
+                            .empty-state
+                                i.fas.fa-star-half-alt
+                                p Chưa có đánh giá
+
+            .content-row
+                // Latest Products
+                .content-card.full-width
+                    .card-header
+                        h3
+                            i.fas.fa-clock
+                            | Sản Phẩm Mới Nhất
+                    .card-body
+                        if statistics.latestProducts && statistics.latestProducts.length > 0
+                            .latest-products
+                                each product in statistics.latestProducts
+                                    .latest-product-item
+                                        if product.thumbnail
+                                            img.product-thumb(src=product.thumbnail alt=product.title)
+                                        else
+                                            .product-thumb.no-image
+                                                i.fas.fa-image
+                                        .product-info
+                                            .product-name #{product.title}
+                                            .product-price $#{product.price}
+                                        .product-date
+                                            i.fas.fa-calendar-alt
+                                            span #{new Date(product.createdAt).toLocaleDateString('vi-VN')}
+                        else
+                            .empty-state
+                                i.fas.fa-box-open
+                                p Chưa có sản phẩm mới
+
+    // CSS Styles
+    style.
+        .dashboard-container {
+            padding: 20px;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+        }
+
+        .welcome-text {
+            font-size: 18px;
+            margin: 0 0 10px 0;
+            opacity: 0.95;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 4px solid;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+        }
+
+        .card-primary { border-left-color: #667eea; }
+        .card-success { border-left-color: #48bb78; }
+        .card-info { border-left-color: #4299e1; }
+        .card-warning { border-left-color: #ed8936; }
+        .card-revenue { border-left-color: #38b2ac; }
+        .card-highlight { border-left-color: #ed64a6; }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .card-primary .stat-icon { background: #e6e9ff; color: #667eea; }
+        .card-success .stat-icon { background: #e6f9f0; color: #48bb78; }
+        .card-info .stat-icon { background: #e6f2ff; color: #4299e1; }
+        .card-warning .stat-icon { background: #fff5e6; color: #ed8936; }
+        .card-revenue .stat-icon { background: #e6f9f7; color: #38b2ac; }
+        .card-highlight .stat-icon { background: #ffe6f3; color: #ed64a6; }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #718096;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-details {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-item i {
+            color: #a0aec0;
+        }
+
+        .detail-item.warning {
+            color: #ed8936;
+        }
+
+        .detail-item.highlight {
+            color: #48bb78;
+            font-weight: 600;
+        }
+
+        .content-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .content-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .card-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header i {
+            color: #667eea;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .category-item {
+            margin-bottom: 20px;
+        }
+
+        .category-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .category-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .category-stats {
+            display: flex;
+            gap: 8px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            background: #e6e9ff;
+            color: #667eea;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.stock {
+            background: #e6f9f0;
+            color: #48bb78;
+        }
+
+        .category-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .category-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.6s ease;
+        }
+
+        .product-list, .product-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .product-item {
+            display: flex;
+            gap: 15px;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .product-item:hover {
+            background: #edf2f7;
+        }
+
+        .product-item.low-stock {
+            border-left: 3px solid #ed8936;
+        }
+
+        .product-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .product-thumb.no-image {
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0aec0;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .product-stock {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+        }
+
+        .stock-danger {
+            color: #ed8936;
+            font-weight: 600;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .product-card {
+            display: flex;
+            gap: 15px;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            background: #edf2f7;
+            transform: translateX(5px);
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .product-image.no-image {
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0aec0;
+        }
+
+        .product-details {
+            flex: 1;
+        }
+
+        .product-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #38b2ac;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: #ed8936;
+        }
+
+        .product-rating.highlight {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .latest-products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .latest-product-item {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+
+        .latest-product-item:hover {
+            background: #edf2f7;
+            transform: translateY(-3px);
+        }
+
+        .latest-product-item .product-thumb {
+            width: 100%;
+            height: 120px;
+            margin-bottom: 10px;
+        }
+
+        .product-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: #718096;
+            margin-top: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a0aec0;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-row {
+                grid-template-columns: 1fr;
+            }
+
+            .latest-products {
+                grid-template-columns: 1fr;
+            }
+        }
